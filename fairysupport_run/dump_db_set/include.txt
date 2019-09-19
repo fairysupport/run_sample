@@ -1,0 +1,2 @@
+../common
+../dump_db/${FILE}_${SERVER}/${1}/${2}

@@ -1,0 +1,1 @@
+output ../sql_version/output/${2}/${FILE}_${SERVER}/${DATE}_${HH}${MM}${SS}

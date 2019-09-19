@@ -1,0 +1,12 @@
+server1.user=vagrant
+server1.password=vagrant
+server1.address=127.0.0.1
+server1.port=2230
+server1.keyPath=..\\vagrant\\.vagrant\\machines\\vm1\\virtualbox\\private_key
+server1.passphrase=
+server2.user=vagrant
+server2.password=vagrant
+server2.address=127.0.0.1
+server2.port=2240
+server2.keyPath=..\\vagrant\\.vagrant\\machines\\vm2\\virtualbox\\private_key
+server2.passphrase=

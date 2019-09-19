@@ -1,0 +1,3 @@
+../common
+../db_data/load_data/${1}/${2}
+../db_data/data/${1}/${FILE}_${SERVER}/${3}

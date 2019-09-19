@@ -1,0 +1,1 @@
+output ../db_data/data/${1}/${FILE}_${SERVER}/${DATE}_${HH}${MM}${SS}

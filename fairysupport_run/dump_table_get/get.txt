@@ -1,0 +1,1 @@
+mysqldump.sql ../dump_table/${FILE}_${SERVER}/${1}/${2}/${DATE}_${HH}${MM}${SS}/mysqldump.sql

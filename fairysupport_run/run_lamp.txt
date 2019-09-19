@@ -1,0 +1,3 @@
+mysql -f server.properties
+apache ${ENV} -f server.properties
+php -f server.properties

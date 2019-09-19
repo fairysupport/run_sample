@@ -1,0 +1,2 @@
+../common
+../sql_version/input/${2}

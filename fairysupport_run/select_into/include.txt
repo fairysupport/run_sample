@@ -1,0 +1,2 @@
+../common
+../db_data/select_into/${1}/${2}

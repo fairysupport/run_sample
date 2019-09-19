@@ -1,0 +1,3 @@
+dns           -f server.properties
+yum_init      -f server.properties
+run_lamp.txt  -f server.properties
