@@ -1,0 +1,157 @@
+<html>
+<head>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>
+Introduction to server management with provisioning tool fairy support run Basic function introduction 3(password and passphrase encryption)
+</title>
+<link rel="stylesheet" href="./css/mb/common.css" type="text/css">
+<link rel="stylesheet" href="./css/pc/common.css" type="text/css" media="screen and (min-width:740px)">
+</head>
+<body>
+<header class="header">
+    <div class="title">Introduction to server management with provisioning tool fairy support run</div>
+</header>
+<div class="body">
+     <div class="table-of-contents-link"><a href="index.html">table of contents<a></div>
+     <div class="subtitle">Basic function introduction 3(password and passphrase encryption)</div>
+     <article class="article">
+         <section class="first-section">
+             <h1>Prepare</h1>
+             <p>
+                 <span><a href="mysql_dump.html">Last time</a>, Basic function of fairy support run using apache http server installation were introduced</span><br>
+                 <span>Until the <a href="mysql_dump.html">last time</a>, a password and the passphrase of private key was written raw in server.properties</span><br>
+                 <span>This time encrypt a password and the passphrase of the private key</span><br>
+                 <span>Please download a sample from <a href="https://github.com/fairysupport/run_sample" target="_blank">here</a></span>
+             </p>
+         </section>
+         <section>
+             <h1>Create key</h1>
+
+             <p>
+                 <span>Create a key with the following command</span>
+             </p>
+
+             <pre class="exec-view">
+fairysupport_run.bat --keygenerate</pre>
+             </p>
+
+             <pre class="exec-view">
+./fairysupport_run.sh --keygenerate</pre>
+             </p>
+
+             <span class="code-title">folder tree</span>
+             <br>
+             <pre class="code-view">
+     |-- fairysupport_run
+     |   |-- com_fairysupport_run.jar
+     |   |-- env.txt
+     |   |-- fairysupport_run_key.txt
+     |   `-- server.properties.local
+</pre>
+
+             <p>
+                 <span>fairysupport_run_key.txt was done</span><br>
+                 <span>This is the key to encryption and decryption</span>
+             </p>
+
+             <h1>encryption</h1>
+
+             <p>
+                 <span>Let's encrypt server.properties using the created key</span><br>
+                 <span>Specify the key in the k option</span><br>
+                 <span>Specify the file you want to encrypt in the f option</span><br>
+                 <span>Specify the encrypted file name in the o option</span>
+             </p>
+
+             <pre class="exec-view">
+fairysupport_run.bat -k fairysupport_run_key.txt -f server.properties -o server_enc.properties</pre>
+             </p>
+
+             <pre class="exec-view">
+./fairysupport_run.sh -k fairysupport_run_key.txt -f server.properties -o server_enc.properties</pre>
+             </p>
+
+             <span class="code-title">folder tree</span>
+             <br>
+             <pre class="code-view">
+     |-- fairysupport_run
+     |   |-- com_fairysupport_run.jar
+     |   |-- env.txt
+     |   |-- fairysupport_run_key.txt
+     |   |-- server.properties.local
+     |   `-- server_enc.properties.local
+</pre>
+
+
+             <p>
+                 <span>server_enc.properties.local was created</span><br>
+                 <span>password and passphrase are encrypted</span>
+             </p>
+
+
+             <h1>Run fairy support run using encrypted file</h1>
+             <p>
+                 <span>Let's run the mysql dump explained <a href="mysql_dump.html">last time</a> using an encrypted file</span><br>
+                 <span>Specify the relative location of the key in the k option</span><br>
+                 <span>Specify the relative location of the encrypted file in the f option</span>
+             </p>
+
+             <pre class="exec-view">
+fairysupport_run.bat dump_db_get mysql -k fairysupport_run_key.txt -f server_enc.properties</pre>
+             <pre class="exec-view">
+./fairysupport_run.sh dump_db_get mysql -k fairysupport_run_key.txt -f server_enc.properties</pre>
+
+             <p>
+                 <span>Let's see under dump_db</span>
+             </p>
+
+             <span class="code-title">folder tree</span>
+             <br>
+             <pre class="code-view">
+     |-- fairysupport_run
+     |   |-- common
+     |   |   |-- common.sh
+     |   |   `-- db_user.sh
+     |   |-- dump_db
+     |   |   |-- server_enc_server1
+     |   |   |   `-- mysql
+     |   |   |      `-- YYYYMMDD_HHMMSS
+     |   |   |         `-- mysqldump.sql
+     |   |   `-- server_enc_server2
+     |   |       `-- mysql
+     |   |          `-- YYYYMMDD_HHMMSS
+     |   |             `-- mysqldump.sql
+     |   |-- dump_db_get
+     |   |   |-- get.txt
+     |   |   |-- include.txt
+     |   |   `-- main.sh
+     |   |-- com_fairysupport_run.jar
+     |   |-- env.txt
+     |   |-- fairysupport_run_key.txt
+     |   `-- server_enc.properties.local
+     |-- vagrant
+     |   `-- Vagrantfile</pre>
+
+             <p>
+                 <span>You can see that server_enc_server1 folder and server_enc_server2 folder are created under dump_db and the result of mysql dump is downloaded</span>
+             </p>
+
+             <br>
+             <p>
+                 <span>That's all for the basic features</span><br>
+                 <span>On the <a href="sample_user.html">next page</a>, we will introduce the example of use of fairy support run using <a href="https://github.com/fairysupport/run_sample" target="_blank">sample</a></span>
+                 <br>
+                 <br>
+                 <span><a href="index.html">table of contents<a></span>
+                 <br>
+             </p>
+
+             <br>
+
+         </section>
+     </article>
+</div>
+<footer class="footer">
+</footer>
+</body>
+</html>

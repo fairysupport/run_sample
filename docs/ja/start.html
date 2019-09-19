@@ -1,0 +1,249 @@
+<html>
+<head>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>
+構成管理ツールfairy support runで行うサーバー管理入門 はじめに(インストールと基本的な使い方)
+</title>
+<link rel="stylesheet" href="./css/mb/common.css" type="text/css">
+<link rel="stylesheet" href="./css/pc/common.css" type="text/css" media="screen and (min-width:740px)">
+</head>
+<body>
+<header class="header">
+    <div class="title">構成管理ツールfairy&nbsp;support&nbsp;runで行うサーバー管理入門</div>
+</header>
+<div class="body">
+     <div class="table-of-contents-link"><a href="index.html">目次<a></div>
+     <div class="subtitle">はじめに(インストールと基本的な使い方)</div>
+     <article class="article">
+         <section class="first-section">
+             <h1>構成管理ツールとは</h1>
+             <p>
+                 <span>システム開発を行う際、サーバー上で行う作業があります</span><br>
+                 <span>ソフトウェアのインストールや設定、ユーザー管理、アプリケーションのデプロイ、データベースへのデータ投入等々．．．</span><br>
+                 <span>これらサーバー上の作業を自動化し、複数サーバーに対して実行できるようにしたものです</span><br>
+                 <span>ここでは<a href="https://ja.fairysupport.com/run/index.html" target="_blank">fairy support run</a>というツールを紹介します</span><br>
+                 <span>また<a href="https://github.com/fairysupport/run_sample" target="_blank">こちら</a>にfairy support runを使ったサンプルをアップロードしてあります。ご自由にお使いください</span>
+             </p>
+         </section>
+         <section>
+             <h1>fairy support runの特徴</h1>
+             <p>
+                 <ol class="decimal-list">
+                     <li>
+                         <span>インストールが簡単</span><br>
+                         <span>ダウンロードして適当な場所に置くだけです</span>
+                     </li>
+                     <li>
+                         <span>学習コストがない</span><br>
+                         <span>fairy support runはシェルで記述します</span><br>
+                         <span>シェルが書ける人であればすぐに使うことができます</span><br>
+                         <span>他の構成管理ツールではYAMLまたは、JSONなどでツール独自の書き方をします</span><br>
+                         <span>その場合、シェルで書いていることを各ツール独自の記法で書き換えているだけである場合が多いです</span><br>
+                         <span>fairy support runではそのようなツール依存の独自記法を学習するコストがありません</span>
+                     </li>
+                     <li>
+                         <span>覚えたことが無駄にならない</span><br>
+                         <span>数年後新しいツールに乗り換えたり、または、移動になった配属先で違うツールを使うことがあります</span><br>
+                         <span>その場合、独自の記法で書くツールを使っていた場合、その知識を使えなくなってしまいます</span><br>
+                         <span>しかし、fairy support runを使うにあたって覚えることはシェルだけです</span><br>
+                         <span>シェルを覚えることは、たとえあなたの配属先がどのような環境であっても、どのようなツールを使っていたとしても、決して無駄になることはないでしょう</span><br>
+                         <span>今後のエンジニア生活でシェルが使えない環境に身を置くことは少ないでしょう</span><br>
+                     </li>
+                     <li>
+                         <span>既存資産を再利用できる</span><br>
+                         <span>現在構成管理ツールを使っていない現場の場合、かつて書き溜めたシェルを利用できます</span>
+                     </li>
+                     <li>
+                         <span>作成物が無駄にならない</span><br>
+                         <span>数年後新しいツールに乗り換えたり、ツールのバージョンが上がったりして作成した成果物が使えなくなってしまう場合があります</span><br>
+                         <span>fairy support runはシェルを作成するだけなので、シェル自体はfairy support runが無くても動き、今後も使えます</span>
+                     </li>
+                 </ol>
+             </p>
+         </section>
+         <section>
+             <h1>fairy support runを試してみる</h1>
+             <p>
+                 <span>実際に動かして試してみましょう</span>
+             </p>
+             <h2>fairy support runのインストール</h2>
+             <p>
+                 <span><a href="https://github.com/fairysupport/run/raw/master/demo/com_fairysupport_run.jar">com_fairysupport_run.jar</a>をダウンロードし、適当なフォルダに置いてください</span>
+             </p>
+             <h2>Javaのインストール</h2>
+             <p>
+                 <span>fairy support runを動かすためにJavaが必要です。Javaをインストールしておいてください</span><br>
+                 <span>Javaのインストールは<a href="https://jdk.java.net/archive/" target="_blank">ここから</a>自分の使用しているOS用のファイルをダウンロードし解凍します</span><br>
+                 <span>JAVA_HOMEという環境変数を作り、解凍したフォルダを値に設定します</span><br>
+                 <span>解凍したフォルダ内のbinフォルダを環境変数PATHに追加します</span><br>
+                 <span>Javaのインストールは以上です</span>
+             </p>
+             <h2>VirtualBox、Vagrantのインストール</h2>
+             <p>
+                 <span>fairy support runを試す環境としてVirtualBox、Vagrantを使います</span><br>
+                 <span><a href="https://www.vagrantup.com/downloads.html" target="_blank">ここから</a>ダウンロードしインストールします</span>
+             </p>
+             <h2>お試し環境の起動</h2>
+             <p>
+                 <span>適当にフォルダを作ります。ここではfairy_support_run_sampleというフォルダを作ってみました</span><br>
+                 <span>その中にVagrantfileというファイルを作ります</span><br>
+                 <span>Vagrantfileの内容は下記です</span>
+             </p>
+
+             <span class="code-title">Vagrantfile</span>
+             <br>
+             <pre class="code-view">
+Vagrant.configure("2") do |config|
+  config.vm.box = "centos/7"
+
+  config.vm.define :vm1 do |server|
+    server.vm.hostname = "vm1"
+    server.vm.network "private_network", ip: "192.168.33.10"
+    server.vm.network "forwarded_port", guest: 80, host: 8080, host_ip: "127.0.0.1"
+    server.vm.network "forwarded_port", guest: 22, host: 2230, host_ip: "127.0.0.1"
+  end
+
+  config.vm.define :vm2 do |server|
+    server.vm.hostname = "vm2"
+    server.vm.network "private_network", ip: "192.168.33.11"
+    server.vm.network "forwarded_port", guest: 80, host: 8181, host_ip: "127.0.0.1"
+    server.vm.network "forwarded_port", guest: 22, host: 2240, host_ip: "127.0.0.1"
+  end
+end
+</pre>
+
+             <span class="code-title">ファイル構成</span>
+             <br>
+             <pre class="code-view">
+|-- fairy_support_run_sample
+|   `-- Vagrantfile</pre>
+
+             <p>
+                 <span>コマンドラインでfairy_support_run_sampleに移動</span><br>
+                 <span>vagrant up</span><br>
+                 <span>と入力</span>
+             </p>
+             <pre class="exec-view">
+cd fairy_support_run_sample
+vagrant up</pre>
+
+             <p>
+                 <span>VirtualBoxマネージャーを起動すると仮想環境が2つ起動しているのが確認できます</span>
+             </p>
+
+             <h2>fairy support runの設定</h2>
+             <p>
+                 <span>環境が整ったので、fairy support runの設定をしていきます。まず接続先サーバーの情報を記述します</span><br>
+                 <span>ダウンロードしてきたcom_fairysupport_run.jarと同階層にserver.propertiesというファイルを作成します</span><br>
+                 <span>サーバーに入る為のユーザー名、パスワード、サーバーのアドレス、ポート、秘密鍵へのパス、秘密鍵のパスフレーズを記載します。centos/7のボックスは秘密鍵のパスフレーズが無いので空欄になります</span><br>
+                 <span>\は2つ重ねて記載します</span>
+             </p>
+             <span class="code-title">server.properties</span>
+             <br>
+             <pre class="code-view">
+server1.user=vagrant
+server1.password=vagrant
+server1.address=127.0.0.1
+server1.port=2230
+server1.keyPath=C:\\fairy_support_run_sample\\.vagrant\\machines\\vm1\\virtualbox\\private_key
+server1.passphrase=
+
+server2.user=vagrant
+server2.password=vagrant
+server2.address=127.0.0.1
+server2.port=2240
+server2.keyPath=C:\\fairy_support_run_sample\\.vagrant\\machines\\vm2\\virtualbox\\private_key
+server2.passphrase=
+</pre>
+
+             <p>
+                 <span>サーバー上で実行するシェルを作成します</span><br>
+                 <span>ダウンロードしてきたcom_fairysupport_run.jarと同階層にtestというフォルダを作成します</span><br>
+                 <span>作成したtestというフォルダ内にmain.shというファイルを作成します</span><br>
+                 <span>今回はhostnameコマンドを実行するだけのシェルです</span><br>
+                 <span>改行コードにCRが入らないようにしましょう。CR+LFでなく、LFで保存</span>
+             </p>
+             <span class="code-title">main.sh</span>
+             <br>
+             <pre class="code-view">
+#!/bin/bash
+
+hostname
+</pre>
+
+             <span class="code-title">ファイル構成</span>
+             <br>
+             <pre class="code-view">
+|-- fairysupport_test
+|   |-- com_fairysupport_run.jar
+|   |-- server.properties
+|   `-- test
+|       `-- main.sh</pre>
+
+             <h2>fairy support runの実行</h2>
+             <p>
+                 <span>設定が終わったので実行してみます</span><br>
+                 <span>コマンドラインでcom_fairysupport_run.jarの置いてあるフォルダに移動</span><br>
+                 <span>java -jar com_fairysupport_run.jar test</span><br>
+                 <span>と入力</span><br>
+                 <span>引数に与えているtestというのは先ほど作成したフォルダ名です</span>
+             </p>
+             <pre class="exec-view">
+cd fairysupport_test
+java -jar com_fairysupport_run.jar test</pre>
+
+             <span class="code-title">実行結果</span>
+             <br>
+             <pre class="exec-view">
+-----------------------------------------------------------------------------------------------------------------------
+[start][127.0.0.1:2240]
+
+....
+
+[run main.sh][127.0.0.1:2240]
+cd /home/vagrant/com_fairysupport_run/test && ./main.sh
+vm2
+[delete file][127.0.0.1:2240]
+
+....
+
+[end][127.0.0.1:2240]
+-----------------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------
+[start][127.0.0.1:2230]
+
+....
+
+[run main.sh][127.0.0.1:2230]
+cd /home/vagrant/com_fairysupport_run/test && ./main.sh
+vm1
+[delete file][127.0.0.1:2230]
+
+....
+
+[end][127.0.0.1:2230]
+-----------------------------------------------------------------------------------------------------------------------</pre>
+
+             <p>
+                 <span>[run main.sh]のところを見るとmain.shが実行されたのがわかります</span><br>
+                 <span>表示された内容を見るとfairy support runは非常に単純な動きだとわかります</span><br>
+                 <span>引数で与えられたフォルダ内のファイルをアップロードし、main.shを実行するという作業を自動で行ってくれるのです</span><br>
+                 <span>基本的な使い方の紹介は以上です</span><br>
+                 <span>他に、ファイルのダウンロード機能や、他のフォルダもアップロードする機能や、server.propertiesの切り替え機能等もあります</span><br>
+                 <span>次ページから<a href="https://github.com/fairysupport/run_sample" target="_blank">サンプル</a>を使って様々な使い方を紹介します</span><br>
+                 <span><a href="apache_install.html">次ページ</a>でapache&nbsp;httpサーバーのインストールを例にfairy support runの機能を紹介していきます</span>
+                 <br>
+                 <br>
+                 <span><a href="index.html">目次<a></span>
+                 <br>
+             </p>
+
+             <br>
+
+         </section>
+     </article>
+</div>
+<footer class="footer">
+</footer>
+</body>
+</html>

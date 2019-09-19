@@ -1,0 +1,673 @@
+<html>
+<head>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>
+構成管理ツールfairy support runで行うサーバー管理入門 基本機能紹介1(apache httpサーバーのインストールを例に)
+</title>
+<link rel="stylesheet" href="./css/mb/common.css" type="text/css">
+<link rel="stylesheet" href="./css/pc/common.css" type="text/css" media="screen and (min-width:740px)">
+</head>
+<body>
+<header class="header">
+    <div class="title">構成管理ツールfairy&nbsp;support&nbsp;runで行うサーバー管理入門</div>
+</header>
+<div class="body">
+     <div class="table-of-contents-link"><a href="index.html">目次<a></div>
+     <div class="subtitle">基本機能紹介1(apache&nbsp;httpサーバーのインストールを例に)</div>
+     <article class="article">
+         <section class="first-section">
+             <h1>準備</h1>
+             <p>
+                 <span><a href="start.html">前回</a>fairy support runのインストールと基本的な動かし方を紹介しました</span><br>
+                 <span>今回はhttpサーバーのインストールを例に基本機能の紹介を行います</span><br>
+                 <span><a href="https://github.com/fairysupport/run_sample" target="_blank">こちら</a>からサンプルをダウンロードしてください</span>
+             </p>
+         </section>
+         <section>
+             <h1>実行環境の起動</h1>
+             <p>
+                 <span><a href="start.html">前回</a>vagrantを起動したままにしている場合vagrant&nbsp;haltでシャットダウンしてください</span><br>
+                 <span>ダウンロードしてきた<a href="https://github.com/fairysupport/run_sample" target="_blank">サンプル</a>内のvagrantフォルダに移動</span><br>
+                 <span>vagrant up</span><br>
+                 <span>と入力</span>
+             </p>
+             <pre class="exec-view">
+cd vagrant
+vagrant up</pre>
+
+             <p>
+                 <span>VirtualBoxマネージャーを起動すると仮想環境が2つ起動しているのが確認できます</span>
+             </p>
+
+             <h1>環境の初期化</h1>
+             <p>
+                 <span>立ち上げた仮想環境はDNSの設定もされていませんし、yumのupdateもされてないので、fairy support runを使って行っていきます</span><br>
+                 <span>ダウンロードしてきた<a href="https://github.com/fairysupport/run_sample" target="_blank">サンプル</a>内のfairysupport_runフォルダに移動</span><br>
+                 <span>java -jar com_fairysupport_run.jar dnsを実行</span><br>
+                 <span>java -jar com_fairysupport_run.jar yum_initを実行</span><br>
+             </p>
+             <pre class="exec-view">
+cd fairysupport_run
+java -jar com_fairysupport_run.jar dns</pre>
+             <pre class="exec-view">
+java -jar com_fairysupport_run.jar yum_init</pre>
+             <p>
+                 <span>java -jar com_fairysupport_run.jar dnsでDNSの設定が行われました</span><br>
+                 <span>java -jar com_fairysupport_run.jar yum_initでyumのupdateと必要なソフトウェアのインストールが行われました</span>
+             </p>
+
+             <h1>シェルの作成</h1>
+             <p>
+                 <span>apache httpサーバーをインストールシェルを作っていきましょう</span><br>
+                 <span>ダウンロードしてきたサンプル内のfairysupport_runフォルダに移動</span><br>
+                 <span>apache_testというフォルダを作成します</span><br>
+                 <span>作成したapache_testフォルダ内にmain.shというファイルを作成します</span><br>
+                 <span>改行コードにCRが入らないようにしましょう。CR+LFでなく、LFで保存</span>
+             </p>
+             <span class="code-title">main.sh</span>
+             <br>
+             <pre class="code-view">
+#!/bin/bash
+
+sudo -S yum -y install httpd
+
+sudo -S firewall-cmd --permanent --zone=public --add-service=http
+sudo -S firewall-cmd --permanent --zone=public --add-service=https
+sudo -S firewall-cmd --reload
+
+sudo -S systemctl start httpd.service
+sudo -S systemctl enable httpd.service
+</pre>
+
+             <p>
+                 <span>main.shの内容</span><br>
+                 <span>yumでhttpdをインストールしています</span><br>
+                 <span>firewalldにhttp、httpsを許可しています</span><br>
+                 <span>httpdを起動します</span><br>
+                 <span>httpdの自動起動を有効にします</span>
+             </p>
+             <br>
+
+             <span class="code-title">ファイル構成</span>
+             <br>
+             <pre class="code-view">
+     |-- fairysupport_run
+     |   |-- apache_test
+     |   |   `-- main.sh
+     |   |-- com_fairysupport_run.jar
+     |   |-- env.txt
+     |   `-- server.properties.local
+     |-- vagrant
+     |   `-- Vagrantfile</pre>
+
+             <h1>server.propertiesの切り替え</h1>
+             <p>
+                 <span><a href="start.html">前回</a>server.propertiesを作成しましたが、サンプルはserver.properties.localというファイルになっています</span><br>
+                 <span>env.txtの中身を見てみましょう。localと記載されています。env.txtという名前のファイルを用意するとserver.propertiesの接尾辞を記載しておくことができます</span><br>
+                 <span>server.properties.local、server.properties.dev、server.properties.stg、server.properties.prdとファイルを用意した場合、env.txtの中身を変えれば、使用するserver.propertiesを切り替えることが可能となります</span><br>
+             </p>
+
+             <h1>fairy support runの実行</h1>
+             <p>
+                 <span>実行してみます</span><br>
+                 <span>com_fairysupport_run.jarの置いてあるフォルダに移動</span><br>
+                 <span>java -jar com_fairysupport_run.jar apache_test</span><br>
+                 <span>と入力</span>
+             </p>
+             <pre class="exec-view">
+cd fairysupport_run
+java -jar com_fairysupport_run.jar apache_test</pre>
+
+             <p>
+                 <span>実行すると出力内容でapache httpサーバーがインストールされたのがわかると思います</span><br>
+                 <span>ブラウザでhttp://localhost:8080にアクセスしてみましょう</span><br>
+                 <span>ブラウザでhttp://localhost:8181にアクセスしてみましょう</span><br>
+                 <span>両方とも正常にページが表示されていると思います</span><br>
+                 <span>2つの環境にapache httpサーバーをインストールすることができました</span><br>
+                 <span>今までjava&nbsp;-jarと入力してきましたが、毎回java&nbsp;-jarと入力するのは面倒です</span><br>
+                 <span><a href="https://github.com/fairysupport/run_sample" target="_blank">サンプル</a>内のfairysupport_run配下にfairysupport_run.batとfairysupport_run.shがあります</span><br>
+                 <span>これを利用すれば毎回java&nbsp;-jarと入力する必要はありません。使用しているOSによってbatを使うかshを使うか選んでください。下記で実行可能です</span><br>
+             <pre class="exec-view">
+fairysupport_run.bat apache_test</pre>
+             <pre class="exec-view">
+./fairysupport_run.sh apache_test</pre>
+             </p>
+
+             <h1>ファイルのアップロード</h1>
+             <p>
+                 <span>apache httpサーバーのインストールができましたが、通常この後、設定ファイルをカスタマイズしなければなりません。</span><br>
+                 <span>設定ファイルを用意し、どのサーバーに対しても同じ設定ファイルを設置するようにしていきましょう</span><br>
+                 <span>ダウンロードしてきた<a href="https://github.com/fairysupport/run_sample" target="_blank">サンプル</a>内のfairysupport_run/apache配下のhttpd.confをコピーし、先ほど作成したapache_testフォルダ内にペーストしましょう</span>
+             </p>
+
+             <span class="code-title">ファイル構成</span>
+             <br>
+             <pre class="code-view">
+     |-- fairysupport_run
+     |   |-- apache_test
+     |   |   |-- httpd.conf
+     |   |   `-- main.sh
+     |   |-- com_fairysupport_run.jar
+     |   |-- env.txt
+     |   `-- server.properties.local
+     |-- vagrant
+     |   `-- Vagrantfile</pre>
+
+             <p>
+                 <span>設定ファイルを設置できるようにシェルを修正しましょう</span>
+             </p>
+             <span class="code-title">main.sh</span>
+             <br>
+             <pre class="code-view">
+#!/bin/bash
+
+sudo -S yum -y install httpd
+
+sudo -S mv /etc/httpd/conf/httpd.conf /etc/httpd/conf/httpd.conf.bk
+
+sudo -S \cp -f ./httpd.conf /etc/httpd/conf/httpd.conf
+sudo -S chmod 644 /etc/httpd/conf/httpd.conf
+
+sudo -S semanage fcontext -a -t httpd_config_t /etc/httpd/conf/httpd.conf
+sudo -S restorecon -v /etc/httpd/conf/httpd.conf
+
+sudo -S firewall-cmd --permanent --zone=public --add-service=http
+sudo -S firewall-cmd --permanent --zone=public --add-service=https
+sudo -S firewall-cmd --reload
+
+sudo -S systemctl restart httpd.service
+sudo -S systemctl enable httpd.service
+</pre>
+
+             <p>
+                 <span>main.shの修正内容</span><br>
+                 <span>mvで設定ファイルのバックアップを取っています</span><br>
+                 <span>apache_test内のファイルはfairy support runの実行でアップロードされるので、アップロードされた設定ファイルをcpで置き換えます。cpの前についている\はfオプションを有効にするため意図的につけています</span><br>
+                 <span>chmodで権限設定しています</span><br>
+                 <span>semanage、restoreconでSELinux対応をしています</span><br>
+                 <span>これでfairy&nbsp;support&nbsp;runを実行するとhttpd.confのバックアップを取り、httpd.confの置き換えが行われます</span>
+             </p>
+             <br>
+
+             <h1>共通処理化</h1>
+             <p>
+                 <span>バックアップを取ったり、ファイルを置き換えたり、ファイルのラベルを設定する処理はよく行う処理です</span><br>
+                 <span>あらかじめ共通処理にまとめておきましょう</span><br>
+                 <span>apache_testと同階層にcommon_testというフォルダを作成します</span><br>
+                 <span>作成したcommon_testフォルダ内にcommon.shというファイルを作成します</span><br>
+                 <span>改行コードにCRが入らないようにしましょう。CR+LFでなく、LFで保存</span>
+             </p>
+
+             <span class="code-title">common.sh</span>
+             <br>
+             <pre class="code-view">
+
+bk_cp_mode_label() {
+  sudo -S mv "${2}" "${2}.bk"
+  sudo -S \cp -f "${1}" "${2}"
+  sudo -S chmod ${3} "${2}"
+  sudo -S semanage fcontext -a -t "${4}" "${2}"
+  sudo -S restorecon -v "${2}"
+}
+
+</pre>
+
+             <p>
+                 <span>common.shの内容</span><br>
+                 <span>上記で修正したmain.shのバックアップからSELinux対応までを関数にしました</span>
+             </p>
+             <br>
+
+             <p>
+                 <span>apache_testフォルダ内にinclude.txtというファイルを作成します</span><br>
+                 <span>include.txtの内容は../common_testとします</span><br>
+                 <span>include.txtという名前のファイルを作成すると、fairy&nbsp;support&nbsp;runはinclude.txtに書かれているフォルダを実行時に一緒にアップロードします</span>
+             </p>
+
+             <span class="code-title">include.txt</span>
+             <br>
+             <pre class="code-view">
+../common_test</pre>
+
+             <br>
+             <p>
+                 <span>共通処理を利用するようにシェルを修正しましょう</span>
+             </p>
+             <span class="code-title">main.sh</span>
+             <br>
+             <pre class="code-view">
+#!/bin/bash
+
+. ../common_test/common.sh
+
+sudo -S yum -y install httpd
+
+bk_cp_mode_label "./httpd.conf" "/etc/httpd/conf/httpd.conf" 644 httpd_config_t
+
+sudo -S firewall-cmd --permanent --zone=public --add-service=http
+sudo -S firewall-cmd --permanent --zone=public --add-service=https
+sudo -S firewall-cmd --reload
+
+sudo -S systemctl restart httpd.service
+sudo -S systemctl enable httpd.service
+</pre>
+
+             <p>
+                 <span>main.shの修正内容</span><br>
+                 <span>共通関数が書かれたファイルを読み込みます。.&nbsp;../common_test/common.shを追記しています。ドット半角スペースcommon.shへの相対パスとなります。半角スペースの前にドットを忘れると共通関数が使えません</span><br>
+                 <span>common.sh内に作成した関数bk_cp_mode_labelを呼んでいます</span>
+             </p>
+             <br>
+
+             <span class="code-title">ファイル構成</span>
+             <br>
+             <pre class="code-view">
+     |-- fairysupport_run
+     |   |-- apache_test
+     |   |   |-- httpd.conf
+     |   |   |-- include.txt
+     |   |   `-- main.sh
+     |   |-- common_test
+     |   |   `-- common.sh
+     |   |-- com_fairysupport_run.jar
+     |   |-- env.txt
+     |   `-- server.properties.local
+     |-- vagrant
+     |   `-- Vagrantfile</pre>
+
+             <p>
+                 <span>これでfairy&nbsp;support&nbsp;runを実行するとcommon_testフォルダも一緒にアップロードされているのがわかります</span>
+             </p>
+
+             <h1>実行ファイルの作成と引数</h1>
+             <p>
+                 <span>今度はenv.txtの内容をシェルに渡して、env.txtの内容によってhttpd.confを変える処理を入れてみましょう</span><br>
+                 <span>今まではfairy&nbsp;support&nbsp;runの引数にフォルダ名を渡していましたが、ファイル名を与えることができます</span><br>
+                 <span>引数に与えることができるファイルを作成してみましょう</span><br>
+                 <span>com_fairysupport_run.jarと同階層にrun_apache_test.txtというファイルを作成してください</span><br>
+                 <span>run_apache_test.txtの内容は下記です</span>
+             </p>
+
+             <br>
+
+             <span class="code-title">run_apache_test.txt</span>
+             <br>
+             <pre class="code-view">
+apache_test ${ENV} -f server.properties
+</pre>
+             <p>
+                 <span>run_apache_test.txtの内容</span><br>
+                 <span>${ENV}と書くとfairy&nbsp;support&nbsp;runの実行時にenv.txtの内容になります</span><br>
+                 <span>${ENV}の他に使用できる特殊変数は下記です</span><br>
+                 <span>${整数}:引数、${DATE}:実行日、${HH}:実行時刻の時部分、${MM}:実行時刻の分部分、${SS}:実行時刻の秒部分</span><br>
+                 <span>fオプションはサーバ情報が記載されたファイルを指定するオプションです。今までfオプションを指定しませんでしたが、fオプションを省略した場合、server.propertiesを指定したことになります</span><br>
+             </p>
+
+             <br>
+             <p>
+                 <span>次にダウンロードしてきた<a href="https://github.com/fairysupport/run_sample" target="_blank">サンプル</a>内のfairysupport_run/apache配下のhttpd.conf.dev、httpd.conf.localをコピーし、apache_testフォルダ内にペーストしましょう</span>
+             </p>
+
+             <br>
+             <p>
+                 <span>次にシェルを修正しましょう</span>
+             </p>
+             <span class="code-title">main.sh</span>
+             <br>
+             <pre class="code-view">
+#!/bin/bash
+
+. ../common_test/common.sh
+
+sudo -S yum -y install httpd
+
+bk_cp_mode_label "./httpd.conf.${1}" "/etc/httpd/conf/httpd.conf" 644 httpd_config_t
+
+sudo -S firewall-cmd --permanent --zone=public --add-service=http
+sudo -S firewall-cmd --permanent --zone=public --add-service=https
+sudo -S firewall-cmd --reload
+
+sudo -S systemctl restart httpd.service
+sudo -S systemctl enable httpd.service
+</pre>
+
+             <p>
+                 <span>main.shの修正内容</span><br>
+                 <span>bk_cp_mode_labelの第1引数を./httpd.conf.${1}にしました。apache_testの第1引数に${ENV}を指定したので、env.txtの内容が${1}に格納されています</span>
+             </p>
+             <br>
+
+             <span class="code-title">ファイル構成</span>
+             <br>
+             <pre class="code-view">
+     |-- fairysupport_run
+     |   |-- apache_test
+     |   |   |-- httpd.conf.dev
+     |   |   |-- httpd.conf.local
+     |   |   |-- include.txt
+     |   |   `-- main.sh
+     |   |-- common_test
+     |   |   `-- common.sh
+     |   |-- com_fairysupport_run.jar
+     |   |-- env.txt
+     |   |-- run_apache_test.txt
+     |   `-- server.properties.local
+     |-- vagrant
+     |   `-- Vagrantfile</pre>
+
+             <p>
+                 <span>実行してみましょう。下記のように拡張子まで含めてファイル名を与えると実行できます</span>
+             </p>
+
+             <pre class="exec-view">
+fairysupport_run.bat run_apache_test.txt</pre>
+             </p>
+
+             <pre class="exec-view">
+./fairysupport_run.sh run_apache_test.txt</pre>
+             </p>
+
+             <p>
+                 <span>httpd.conf.localが/etc/httpd/conf/配下にhttpd.confとして置かれます</span>
+             </p>
+
+             <h1>冪等性</h1>
+             <p>
+                 <span>上記のapache_testを何回も実行すると毎回シェルに記載した内容が全て実行されてしまいます。</span><br>
+                 <span>ツールによっては独自記法の中で1回しか行わないように自動的に制御するものや、実行させない為のif文をYAMLやJSONで記載させるものもあります。</span><br>
+                 <span>fairy&nbsp;support&nbsp;runは自分でif文を書くことになります。しかし、これは大したif文ではありません。非常に簡単なif文だけで実現できます</span><br>
+                 <span>ツールがコマンドを実行してくれる条件を調べる必要もないですし、実行させないためのYAMLやJSONの独自記法を覚える必要もありません</span><br>
+                 <span>実際に書いてみましょう</span>
+             </p>
+
+             <span class="code-title">common.sh</span>
+             <br>
+             <pre class="code-view">
+
+yum_installed_exit() {
+  if sudo -S yum list installed | grep "${1}" > /dev/null 2>&1; then
+    echo "${2}"
+    exit 0
+  fi
+}
+
+bk_cp_mode_label() {
+  sudo -S mv "${2}" "${2}.bk"
+  sudo -S \cp -f "${1}" "${2}"
+  sudo -S chmod ${3} "${2}"
+  sudo -S semanage fcontext -a -t "${4}" "${2}"
+  sudo -S restorecon -v "${2}"
+}
+
+</pre>
+
+             <p>
+                 <span>common.shの修正内容</span><br>
+                 <span>yum_installed_exitという関数を追加しました</span><br>
+                 <span>yum list installedコマンドで既にインストール済みか確認して、インストール済みならメッセージを出力してシェルを終了するというだけです</span>
+             </p>
+             <br>
+
+             <p>
+                 <span>シェルに上記で追加した関数を入れてみましょう</span>
+             </p>
+             <span class="code-title">main.sh</span>
+             <br>
+             <pre class="code-view">
+#!/bin/bash
+
+. ../common_test/common.sh
+
+yum_installed_exit "httpd" "Apache HTTP SERVER is already installed"
+
+sudo -S yum -y install httpd
+
+bk_cp_mode_label "./httpd.conf.${1}" "/etc/httpd/conf/httpd.conf" 644 httpd_config_t
+
+sudo -S firewall-cmd --permanent --zone=public --add-service=http
+sudo -S firewall-cmd --permanent --zone=public --add-service=https
+sudo -S firewall-cmd --reload
+
+sudo -S systemctl restart httpd.service
+sudo -S systemctl enable httpd.service
+</pre>
+
+             <p>
+                 <span>main.shの修正内容</span><br>
+                 <span>yum_installed_exitの呼び出しを追記しました</span><br>
+                 <span>これでhttpdがインストール済みの場合、yum_installed_exitより下行は実行されません</span><br>
+             </p>
+             <br>
+
+             <p>
+                 <span>これで十分だと思うのですが、他のコマンドも必要な時だけ実行される関数を作成してみましょう</span>
+             </p>
+
+             <span class="code-title">common.sh</span>
+             <br>
+             <pre class="code-view">
+
+yum_installed_exit() {
+  if sudo -S yum list installed | grep "${1}" > /dev/null 2>&1; then
+    echo "${2}"
+    exit 0
+  fi
+}
+
+yum_install() {
+  if ! sudo -S yum list installed | grep "${1}" > /dev/null 2>&1; then
+     sudo -S yum -y install "${2}"
+  fi
+}
+
+bk_cp_mode_label() {
+  if ! sudo -S diff "${1}" "${2}" > /dev/null 2>&1; then
+    sudo -S mv "${2}" "${2}.bk"
+    sudo -S \cp -f "${1}" "${2}"
+    sudo -S chmod ${3} "${2}"
+    sudo -S semanage fcontext -a -t "${4}" "${2}"
+    sudo -S restorecon -v "${2}"
+  fi
+}
+
+systemctl_start() {
+  if sudo -S systemctl status "${1}" | grep "Active: inactive" > /dev/null 2>&1; then
+    sudo -S systemctl start "${1}.service"
+  fi
+}
+
+systemctl_enable() {
+  if sudo -S systemctl is-enabled "${1}" | grep disabled > /dev/null 2>&1; then
+    sudo -S systemctl enable "${1}.service"
+  fi
+}
+
+firewalld_add_service() {
+  if ! echo " `sudo -S firewall-cmd --list-services --permanent --zone=public` " | grep " ${1} " > /dev/null 2>&1; then
+      sudo -S firewall-cmd --permanent --zone=public --add-service="${1}"
+      sudo -S firewall-cmd --reload
+  fi
+}
+
+</pre>
+
+             <p>
+                 <span>common.shの修正内容</span><br>
+                 <span>yum_installという関数を追加しました。yumでインストール済みでない場合、yum installが実行される関数です</span><br>
+                 <span>bk_cp_mode_labelという関数を修正しました。コピー元のファイルとコピー先のファイルの内容が異なる場合のみ、処理が実行されるように修正しました</span><br>
+                 <span>systemctl_startという関数を追加しました。サービスが停止状態の場合、サービスがstartされる関数です</span><br>
+                 <span>systemctl_enableという関数を追加しました。サービスが自動起動しない場合、サービスを自動起動設定にする関数です</span><br>
+                 <span>firewalld_add_serviceという関数を追加しました。サービスがpublicゾーンに無い場合、publicゾーンに追加する関数です</span>
+             </p>
+             <br>
+
+             <p>
+                 <span>シェルに上記で追加した関数を入れてみましょう</span>
+             </p>
+             <span class="code-title">main.sh</span>
+             <br>
+             <pre class="code-view">
+#!/bin/bash
+
+. ../common_test/common.sh
+
+yum_installed_exit "httpd" "Apache HTTP SERVER is already installed"
+
+yum_install httpd httpd
+
+bk_cp_mode_label "./httpd.conf.${1}" "/etc/httpd/conf/httpd.conf" 644 httpd_config_t
+
+firewalld_add_service http
+firewalld_add_service https
+
+systemctl_start httpd
+systemctl_enable httpd
+</pre>
+
+             <p>
+                 <span>main.shの修正内容</span><br>
+                 <span>common.shに増やした関数を呼び出すように修正しました</span>
+             </p>
+             <br>
+
+             <p>
+                 <span>実行してみましょう</span>
+             </p>
+
+             <pre class="exec-view">
+fairysupport_run.bat run_apache_test.txt</pre>
+             </p>
+
+             <pre class="exec-view">
+./fairysupport_run.sh run_apache_test.txt</pre>
+             </p>
+
+             <p>
+                 <span>httpdがインストール済みなら</span><br>
+                 <span>Apache HTTP SERVER is already installed</span><br>
+                 <span>とメッセージが出力されて処理が終了します</span>
+             </p>
+
+             <h1>server.propertiesの分割</h1>
+             <p>
+                 <span>server.properties.localにサーバー情報を2つ記載して、2つの環境に対して処理を実行してきましたが、httpサーバーのインストールはwebサーバーにのみ行う作業です</span><br>
+                 <span>しかし、ユーザー追加やグループ追加はwebサーバーにもDBサーバーにも行う作業です</span><br>
+                 <span>server.properties.localに記載したserver1をwebサーバー、server2をDBサーバーに見立ててserver.propertiesを分割してみましょう</span>
+             </p>
+
+             <span class="code-title">server_web.properties.local</span>
+             <br>
+             <pre class="code-view">
+server1.user=vagrant
+server1.password=vagrant
+server1.address=127.0.0.1
+server1.port=2230
+server1.keyPath=C:\\fairy_support_run_sample\\.vagrant\\machines\\vm1\\virtualbox\\private_key
+server1.passphrase=
+</pre>
+
+             <span class="code-title">server_db.properties.local</span>
+             <br>
+             <pre class="code-view">
+server1.user=vagrant
+server1.password=vagrant
+server1.address=127.0.0.1
+server1.port=2240
+server1.keyPath=C:\\fairy_support_run_sample\\.vagrant\\machines\\vm2\\virtualbox\\private_key
+server1.passphrase=
+</pre>
+
+             <span class="code-title">server_all.txt</span>
+             <br>
+             <pre class="code-view">
+server_web.properties
+server_db.properties
+</pre>
+
+             <span class="code-title">run_all_apache_test.txt</span>
+             <br>
+             <pre class="code-view">
+apache_test ${ENV} -i server_all.txt
+</pre>
+
+             <span class="code-title">run_apache_test.txt</span>
+             <br>
+             <pre class="code-view">
+apache_test ${ENV} -f server_web.properties
+</pre>
+
+             <span class="code-title">ファイル構成</span>
+             <br>
+             <pre class="code-view">
+     |-- fairysupport_run
+     |   |-- apache_test
+     |   |   |-- httpd.conf.dev
+     |   |   |-- httpd.conf.local
+     |   |   |-- include.txt
+     |   |   `-- main.sh
+     |   |-- common_test
+     |   |   `-- common.sh
+     |   |-- com_fairysupport_run.jar
+     |   |-- env.txt
+     |   |-- run_apache_test.txt
+     |   |-- run_all_apache_test.txt
+     |   |-- server_all.txt
+     |   |-- server_web.properties.local
+     |   `-- server_db.properties.local
+     |-- vagrant
+     |   `-- Vagrantfile</pre>
+
+             <p>
+                 <span>server_web.properties.local、server_db.properties.local、server_all.txt、run_all_apache_test.txtの4ファイルを作成しました</span><br>
+                 <span>run_apache_test.txtを修正しました</span><br>
+                 <span>run_all_apache_test.txtにはiオプションでserver_all.txtが指定されています。server_all.txtには2つのpropertiesファイル名が書かれています</span><br>
+                 <span>見た通り、分割したproperties名を記載したファイルをiオプションでfairy&nbsp;support&nbsp;runに渡し、複数のサーバー上でシェルを実行することができます</span><br>
+             </p>
+
+             <p>
+                 <span>実行してみましょう</span>
+             </p>
+
+             <pre class="exec-view">
+fairysupport_run.bat run_all_apache_test.txt</pre>
+             </p>
+
+             <pre class="exec-view">
+./fairysupport_run.sh run_all_apache_test.txt</pre>
+             </p>
+
+             <p>
+                 <span>server_web.properties.localとserver_db.properties.localに記載されたサーバー上でシェルが実行されます</span>
+             </p>
+
+             <br>
+             <pre class="exec-view">
+fairysupport_run.bat run_apache_test.txt</pre>
+             </p>
+
+             <pre class="exec-view">
+./fairysupport_run.sh run_apache_test.txt</pre>
+             </p>
+
+             <p>
+                 <span>server_web.properties.localに記載されたサーバー上でのみシェルが実行されます</span>
+             </p>
+
+             <br>
+             <p>
+                 <span><a href="mysql_dump.html">次ページ</a>mysql dumpを例にfairy support runの機能を紹介</span>
+                 <br>
+                 <br>
+                 <span><a href="index.html">目次<a></span>
+                 <br>
+             </p>
+
+             <br>
+
+         </section>
+     </article>
+</div>
+<footer class="footer">
+</footer>
+</body>
+</html>

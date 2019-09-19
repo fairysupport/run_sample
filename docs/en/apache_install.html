@@ -1,0 +1,670 @@
+<html>
+<head>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>
+Introduction to server management with provisioning tool fairy support run Basic function introduction 1(Using apache http server installation as an example)
+</title>
+<link rel="stylesheet" href="./css/mb/common.css" type="text/css">
+<link rel="stylesheet" href="./css/pc/common.css" type="text/css" media="screen and (min-width:740px)">
+</head>
+<body>
+<header class="header">
+    <div class="title">Introduction to server management with provisioning tool fairy support run</div>
+</header>
+<div class="body">
+     <div class="table-of-contents-link"><a href="index.html">table of contents<a></div>
+     <div class="subtitle">Basic function introduction 1(Using apache http server installation as an example)</div>
+     <article class="article">
+         <section class="first-section">
+             <h1>Prepare</h1>
+             <p>
+                 <span><a href="start.html">Last time</a>, installation method and a basic operation of fairy support run were introduced</span><br>
+                 <span>A basic function is introduced using apache http server installation as an example this time/span><br>
+                 <span>Please download a sample from <a href="https://github.com/fairysupport/run_sample" target="_blank">here</a></span>
+             </p>
+         </section>
+         <section>
+             <h1>Starting the execution environment</h1>
+             <p>
+                 <span>If you left vagrant running <a href="start.html">last time</a>, shut down with vagrant halt</span><br>
+                 <span>Move to the vagrant folder in the downloaded <a href="https://github.com/fairysupport/run_sample" target="_blank">サンプル</a></span><br>
+                 <span>Enter vagrant up</span>
+             </p>
+             <pre class="exec-view">
+cd vagrant
+vagrant up</pre>
+
+             <p>
+                 <span>When you start VirtualBox Manager, you can see that two virtual environments are running</span>
+             </p>
+
+             <h1>Initializing the environment</h1>
+             <p>
+                 <span>The virtual environment that was started is not configured for DNS, nor is yum updated, so will do using fairy support run</span><br>
+                 <span>Move to folder fairysupport_run in the downloaded <a href="https://github.com/fairysupport/run_sample" target="_blank">sample</a></span><br>
+                 <span>Enter java -jar com_fairysupport_run.jar dns</span><br>
+                 <span>Enter java -jar com_fairysupport_run.jar yum_init</span><br>
+             </p>
+             <pre class="exec-view">
+cd fairysupport_run
+java -jar com_fairysupport_run.jar dns</pre>
+             <pre class="exec-view">
+java -jar com_fairysupport_run.jar yum_init</pre>
+             <p>
+                 <span>DNS was set by java -jar com_fairysupport_run.jar dns</span><br>
+                 <span>In java -jar com_fairysupport_run.jar yum_init, yum update and necessary software were installed</span>
+             </p>
+
+             <h1>Creating a shell</h1>
+             <p>
+                 <span>Let's make an apache http server install shell</span><br>
+                 <span>Move to folder fairysupport_run in the downloaded <a href="https://github.com/fairysupport/run_sample" target="_blank">sample</a></span><br>
+                 <span>Create a folder called apache_test</span><br>
+                 <span>Create a file called main.sh in the created apache_test folder</span><br>
+                 <span>Make sure that CR is not included in the line feed code. Save as LF instead of CR+LF</span>
+             </p>
+             <span class="code-title">main.sh</span>
+             <br>
+             <pre class="code-view">
+#!/bin/bash
+
+sudo -S yum -y install httpd
+
+sudo -S firewall-cmd --permanent --zone=public --add-service=http
+sudo -S firewall-cmd --permanent --zone=public --add-service=https
+sudo -S firewall-cmd --reload
+
+sudo -S systemctl start httpd.service
+sudo -S systemctl enable httpd.service
+</pre>
+
+             <p>
+                 <span>Contents of main.sh</span><br>
+                 <span>httpd is installed using yum</span><br>
+                 <span>firewalld permits http and https</span><br>
+                 <span>Start httpd</span><br>
+                 <span>Enable httpd autostart</span>
+             </p>
+             <br>
+
+             <span class="code-title">folder tree</span>
+             <br>
+             <pre class="code-view">
+     |-- fairysupport_run
+     |   |-- apache_test
+     |   |   `-- main.sh
+     |   |-- com_fairysupport_run.jar
+     |   |-- env.txt
+     |   `-- server.properties.local
+     |-- vagrant
+     |   `-- Vagrantfile</pre>
+
+             <h1>Switching server.properties</h1>
+             <p>
+                 <span>server.properties was made <a href="start.html">last time</a>, but a sample is a file as server.properties.local</span><br>
+                 <span>Let's take a look at the contents of env.txt. It is written as local. If you prepare a file named env.txt, you can write the suffix of server.properties</span><br>
+                 <span>If you prepare the files server.properties.local, server.properties.dev, server.properties.stg, server.properties.prd, you can switch the server.properties to use by changing the contents of env.txt</span><br>
+             </p>
+
+             <h1>Run of fairy support run</h1>
+             <p>
+                 <span>I'll try</span><br>
+                 <span>Move to the folder where com_fairysupport_run.jar is put</span><br>
+                 <span>Enter java -jar com_fairysupport_run.jar apache_test</span>
+             </p>
+             <pre class="exec-view">
+cd fairysupport_run
+java -jar com_fairysupport_run.jar apache_test</pre>
+
+             <p>
+                 <span>When you run it, you will see that the apache http server is installed in the output contents</span><br>
+                 <span>Let's access http://localhost:8080 in a browser</span><br>
+                 <span>Let's access http://localhost:8181 in a browser</span><br>
+                 <span>I think both are displaying pages correctly</span><br>
+                 <span>I was able to install apache http server in two environments</span><br>
+                 <span>I've entered java -jar so far, but it's cumbersome to enter java -jar every time</span><br>
+                 <span>fairysupport_run.bat and fairysupport_run.sh are under fairysupport_run in the <a href="https://github.com/fairysupport/run_sample" target="_blank">sample</a></span><br>
+                 <span>If this is used, it is not necessary to enter java -jar every time. Choose whether to use bat or sh depending on the OS you are using. It's possible to execute by the following.</span><br>
+             <pre class="exec-view">
+fairysupport_run.bat apache_test</pre>
+             <pre class="exec-view">
+./fairysupport_run.sh apache_test</pre>
+             </p>
+
+             <h1>Upload file</h1>
+             <p>
+                 <span>After apache http server installed, you usually have to customize the configuration file</span><br>
+                 <span>Prepare a configuration file and set the same configuration file for all servers</span><br>
+                 <span>Copy httpd.conf under fairysupport_run/apache in the downloaded <a href="https://github.com/fairysupport/run_sample" target="_blank">sample</a> and paste it into the apache_test folder you created earlier</span>
+             </p>
+
+             <span class="code-title">folder tree</span>
+             <br>
+             <pre class="code-view">
+     |-- fairysupport_run
+     |   |-- apache_test
+     |   |   |-- httpd.conf
+     |   |   `-- main.sh
+     |   |-- com_fairysupport_run.jar
+     |   |-- env.txt
+     |   `-- server.properties.local
+     |-- vagrant
+     |   `-- Vagrantfile</pre>
+
+             <p>
+                 <span>Let's modify the shell so that it can set the configuration file</span>
+             </p>
+             <span class="code-title">main.sh</span>
+             <br>
+             <pre class="code-view">
+#!/bin/bash
+
+sudo -S yum -y install httpd
+
+sudo -S mv /etc/httpd/conf/httpd.conf /etc/httpd/conf/httpd.conf.bk
+
+sudo -S \cp -f ./httpd.conf /etc/httpd/conf/httpd.conf
+sudo -S chmod 644 /etc/httpd/conf/httpd.conf
+
+sudo -S semanage fcontext -a -t httpd_config_t /etc/httpd/conf/httpd.conf
+sudo -S restorecon -v /etc/httpd/conf/httpd.conf
+
+sudo -S firewall-cmd --permanent --zone=public --add-service=http
+sudo -S firewall-cmd --permanent --zone=public --add-service=https
+sudo -S firewall-cmd --reload
+
+sudo -S systemctl restart httpd.service
+sudo -S systemctl enable httpd.service
+</pre>
+
+             <p>
+                 <span>Contents of main.sh</span><br>
+                 <span>Backing up configuration files using mv</span><br>
+                 <span>The file in apache_test is uploaded by runing A, so replace the uploaded configuration file using cp. The \ that comes before cp is intentionally added to enable the f option</span><br>
+                 <span>Setting permissions with chmod</span><br>
+                 <span>semanage and restorecon is handling SELinux</span><br>
+                 <span>When fairy support run is executed in this state, httpd.conf is backed up and httpd.conf is replaced</span>
+             </p>
+             <br>
+
+             <h1>Common processing</h1>
+             <p>
+                 <span>The process of making backup files, replacing files, and labeling files is frequently performed</span><br>
+                 <span>Let's put it together in common process</span><br>
+                 <span>Create a folder called common_test in the same hierarchy as apache_test</span><br>
+                 <span>Create a file called common.sh in the created common_test folder</span><br>
+                 <span>Make sure that CR is not included in the line feed code. Save as LF instead of CR+LF</span>
+             </p>
+
+             <span class="code-title">common.sh</span>
+             <br>
+             <pre class="code-view">
+
+bk_cp_mode_label() {
+  sudo -S mv "${2}" "${2}.bk"
+  sudo -S \cp -f "${1}" "${2}"
+  sudo -S chmod ${3} "${2}"
+  sudo -S semanage fcontext -a -t "${4}" "${2}"
+  sudo -S restorecon -v "${2}"
+}
+
+</pre>
+
+             <p>
+                 <span>Contents of common.sh</span><br>
+                 <span>Created the function to perform from backup to SELinux handle</span>
+             </p>
+             <br>
+
+             <p>
+                 <span>Create a file called include.txt in the apache_test folder</span><br>
+                 <span>The contents of include.txt is ../common_test</span><br>
+                 <span>If you exist a file called include.txt, fairy support run will upload the folder written in include.txt at runtime</span>
+             </p>
+
+             <span class="code-title">include.txt</span>
+             <br>
+             <pre class="code-view">
+../common_test</pre>
+
+             <br>
+             <p>
+                 <span>Let's modify the shell to use common processing</span>
+             </p>
+             <span class="code-title">main.sh</span>
+             <br>
+             <pre class="code-view">
+#!/bin/bash
+
+. ../common_test/common.sh
+
+sudo -S yum -y install httpd
+
+bk_cp_mode_label "./httpd.conf" "/etc/httpd/conf/httpd.conf" 644 httpd_config_t
+
+sudo -S firewall-cmd --permanent --zone=public --add-service=http
+sudo -S firewall-cmd --permanent --zone=public --add-service=https
+sudo -S firewall-cmd --reload
+
+sudo -S systemctl restart httpd.service
+sudo -S systemctl enable httpd.service
+</pre>
+
+             <p>
+                 <span>Contents of main.sh</span><br>
+                 <span>Read a file which the common function was written. . ../common_test/common.sh is added. It is a the dot, half-width space, relative path to common.sh. If you didn't write the dot before the half-width space, shell cannot use the common function</span><br>
+                 <span>The function bk_cp_mode_label created in common.sh is called</span>
+             </p>
+             <br>
+
+             <span class="code-title">folder tree</span>
+             <br>
+             <pre class="code-view">
+     |-- fairysupport_run
+     |   |-- apache_test
+     |   |   |-- httpd.conf
+     |   |   |-- include.txt
+     |   |   `-- main.sh
+     |   |-- common_test
+     |   |   `-- common.sh
+     |   |-- com_fairysupport_run.jar
+     |   |-- env.txt
+     |   `-- server.properties.local
+     |-- vagrant
+     |   `-- Vagrantfile</pre>
+
+             <p>
+                 <span>If you run fairy support run in this state, you can see that the common_test folder is also uploaded</span>
+             </p>
+
+             <h1>Execution file creation and arguments</h1>
+             <p>
+                 <span>Next, let's pass the contents of env.txt to the shell and add a process to change httpd.conf according to the contents of env.txt</span><br>
+                 <span>So far we have passed the folder name in the argument of fairy support run, but you can give the file name</span><br>
+                 <span>Let's create a file that can be given arguments</span><br>
+                 <span>Create a file called run_apache_test.txt in the same hierarchy as com_fairysupport_run.jar</span><br>
+                 <span>The contents of run_apache_test.txt are the following</span>
+             </p>
+
+             <br>
+
+             <span class="code-title">run_apache_test.txt</span>
+             <br>
+             <pre class="code-view">
+apache_test ${ENV} -f server.properties
+</pre>
+             <p>
+                 <span>Contents of run_apache_test.txt</span><br>
+                 <span>If you write ${ENV}, ${ENV} becomes the contents of env.txt when fairy support run is executed</span><br>
+                 <span>In addition to ${ENV}, the following special variables can be used</span><br>
+                 <span>${integer}:argument, ${DATE}: Execution date, ${HH}: hour part of the execution time, ${MM}: minute part of the execution time, ${SS}: second part of the execution time</span><br>
+                 <span>Specify the file containing server information with f option. If the f option is omitted, server.properties is specified</span><br>
+             </p>
+
+             <br>
+             <p>
+                 <span>Next, copy httpd.conf.dev and httpd.conf.local under fairysupport_run/apache in the downloaded <a href="https://github.com/fairysupport/run_sample" target="_blank">sample</a> and paste them into the apache_test folder</span>
+             </p>
+
+             <br>
+             <p>
+                 <span>Next, let's modify the shell</span>
+             </p>
+             <span class="code-title">main.sh</span>
+             <br>
+             <pre class="code-view">
+#!/bin/bash
+
+. ../common_test/common.sh
+
+sudo -S yum -y install httpd
+
+bk_cp_mode_label "./httpd.conf.${1}" "/etc/httpd/conf/httpd.conf" 644 httpd_config_t
+
+sudo -S firewall-cmd --permanent --zone=public --add-service=http
+sudo -S firewall-cmd --permanent --zone=public --add-service=https
+sudo -S firewall-cmd --reload
+
+sudo -S systemctl restart httpd.service
+sudo -S systemctl enable httpd.service
+</pre>
+
+             <p>
+                 <span>Contents of main.sh</span><br>
+                 <span>Changed the first argument of bk_cp_mode_label to ./httpd.conf.${1}. Because ${ENV} was given to the first argument of apache_test, the contents of env.txt are stored in ${1}</span>
+             </p>
+             <br>
+
+             <span class="code-title">folder tree</span>
+             <br>
+             <pre class="code-view">
+     |-- fairysupport_run
+     |   |-- apache_test
+     |   |   |-- httpd.conf.dev
+     |   |   |-- httpd.conf.local
+     |   |   |-- include.txt
+     |   |   `-- main.sh
+     |   |-- common_test
+     |   |   `-- common.sh
+     |   |-- com_fairysupport_run.jar
+     |   |-- env.txt
+     |   |-- run_apache_test.txt
+     |   `-- server.properties.local
+     |-- vagrant
+     |   `-- Vagrantfile</pre>
+
+             <p>
+                 <span>Let's run. It can be executed by giving a file name including the extension as shown below</span>
+             </p>
+
+             <pre class="exec-view">
+fairysupport_run.bat run_apache_test.txt</pre>
+             </p>
+
+             <pre class="exec-view">
+./fairysupport_run.sh run_apache_test.txt</pre>
+             </p>
+
+             <p>
+                 <span>httpd.conf.local is placed as httpd.conf under /etc/httpd/conf/</span>
+             </p>
+
+             <h1>Idempotence</h1>
+             <p>
+                 <span>If you execute the above apache_test many times, everything described in the shell will be executed every time</span><br>
+                 <span>Some There is The tool which automatically controls so that the contents of a shell are not executed each time in tool-specific notation and some There is The tool to describe if statement to prevent execution using YAML or JSON</span><br>
+                 <span>fairy support run will write the if statement by myself. But this won't be a if statement of big deal. This can be achieved with a very simple if statement</span><br>
+                 <span>You don't need to research the conditions under which the tool will execute the command, nor do you need to learn YAML or JSON tool-specific notation to prevent the shell from running</span><br>
+                 <span>Let's actually write</span>
+             </p>
+
+             <span class="code-title">common.sh</span>
+             <br>
+             <pre class="code-view">
+
+yum_installed_exit() {
+  if sudo -S yum list installed | grep "${1}" > /dev/null 2>&1; then
+    echo "${2}"
+    exit 0
+  fi
+}
+
+bk_cp_mode_label() {
+  sudo -S mv "${2}" "${2}.bk"
+  sudo -S \cp -f "${1}" "${2}"
+  sudo -S chmod ${3} "${2}"
+  sudo -S semanage fcontext -a -t "${4}" "${2}"
+  sudo -S restorecon -v "${2}"
+}
+
+</pre>
+
+             <p>
+                 <span>The correction contents of common.sh</span><br>
+                 <span>Added a function called yum_installed_exit</span><br>
+                 <span>Just check if it is already installed using the yum list installed command, and if it is installed, just output a message and exit the shell</span>
+             </p>
+             <br>
+
+             <p>
+                 <span>Let's put the function added above into the shell</span>
+             </p>
+             <span class="code-title">main.sh</span>
+             <br>
+             <pre class="code-view">
+#!/bin/bash
+
+. ../common_test/common.sh
+
+yum_installed_exit "httpd" "Apache HTTP SERVER is already installed"
+
+sudo -S yum -y install httpd
+
+bk_cp_mode_label "./httpd.conf.${1}" "/etc/httpd/conf/httpd.conf" 644 httpd_config_t
+
+sudo -S firewall-cmd --permanent --zone=public --add-service=http
+sudo -S firewall-cmd --permanent --zone=public --add-service=https
+sudo -S firewall-cmd --reload
+
+sudo -S systemctl restart httpd.service
+sudo -S systemctl enable httpd.service
+</pre>
+
+             <p>
+                 <span>The correction contents of main.sh</span><br>
+                 <span>Added a call to yum_installed_exit</span><br>
+                 <span>If httpd is already installed, the line below yum_installed_exit will not be executed</span><br>
+             </p>
+             <br>
+
+             <p>
+                 <span>I think this is enough, but let's create a function that will only run when other commands are needed</span>
+             </p>
+
+             <span class="code-title">common.sh</span>
+             <br>
+             <pre class="code-view">
+
+yum_installed_exit() {
+  if sudo -S yum list installed | grep "${1}" > /dev/null 2>&1; then
+    echo "${2}"
+    exit 0
+  fi
+}
+
+yum_install() {
+  if ! sudo -S yum list installed | grep "${1}" > /dev/null 2>&1; then
+     sudo -S yum -y install "${2}"
+  fi
+}
+
+bk_cp_mode_label() {
+  if ! sudo -S diff "${1}" "${2}" > /dev/null 2>&1; then
+    sudo -S mv "${2}" "${2}.bk"
+    sudo -S \cp -f "${1}" "${2}"
+    sudo -S chmod ${3} "${2}"
+    sudo -S semanage fcontext -a -t "${4}" "${2}"
+    sudo -S restorecon -v "${2}"
+  fi
+}
+
+systemctl_start() {
+  if sudo -S systemctl status "${1}" | grep "Active: inactive" > /dev/null 2>&1; then
+    sudo -S systemctl start "${1}.service"
+  fi
+}
+
+systemctl_enable() {
+  if sudo -S systemctl is-enabled "${1}" | grep disabled > /dev/null 2>&1; then
+    sudo -S systemctl enable "${1}.service"
+  fi
+}
+
+firewalld_add_service() {
+  if ! echo " `sudo -S firewall-cmd --list-services --permanent --zone=public` " | grep " ${1} " > /dev/null 2>&1; then
+      sudo -S firewall-cmd --permanent --zone=public --add-service="${1}"
+      sudo -S firewall-cmd --reload
+  fi
+}
+
+</pre>
+
+             <p>
+                 <span>The correction contents of common.sh</span><br>
+                 <span>Added a function called yum_install. yum_install is a function that performs a yum install if the installation has not yet been done using yum</span><br>
+                 <span>Modified a function called bk_cp_mode_label. Modified so that processing is executed only when the contents of the copy source file and the copy destination file are different</span><br>
+                 <span>Added a function called systemctl_start. This is the function that start the service if it is stopped</span><br>
+                 <span>Added a function called systemctl_enable. This function set the service to auto start if the service does not auto start</span><br>
+                 <span>Added a function called firewalld_add_service. This function adds a service to the public zone if the service is not in the public zone</span>
+             </p>
+             <br>
+
+             <p>
+                 <span>Let's put the function added above into the shell</span>
+             </p>
+             <span class="code-title">main.sh</span>
+             <br>
+             <pre class="code-view">
+#!/bin/bash
+
+. ../common_test/common.sh
+
+yum_installed_exit "httpd" "Apache HTTP SERVER is already installed"
+
+yum_install httpd httpd
+
+bk_cp_mode_label "./httpd.conf.${1}" "/etc/httpd/conf/httpd.conf" 644 httpd_config_t
+
+firewalld_add_service http
+firewalld_add_service https
+
+systemctl_start httpd
+systemctl_enable httpd
+</pre>
+
+             <p>
+                 <span>The correction contents of main.sh</span><br>
+                 <span>Modified to call the function added in common.sh</span>
+             </p>
+             <br>
+
+             <p>
+                 <span>Let's run</span>
+             </p>
+
+             <pre class="exec-view">
+fairysupport_run.bat run_apache_test.txt</pre>
+             </p>
+
+             <pre class="exec-view">
+./fairysupport_run.sh run_apache_test.txt</pre>
+             </p>
+
+             <p>
+                 <span>If httpd is already installed, the message "Apache HTTP SERVER is already installed" will be output and the process will be terminated</span>
+             </p>
+
+             <h1>Divide server.properties</h1>
+             <p>
+                 <span>Two server information is described in server.properties.local and processing has been executed for two environments</span><br>
+                 <span>However, http server installation is job on the only web server</span><br>
+                 <span>On the other hand, add user or add group is job on the web server and the DB server</span><br>
+                 <span>Let's divide server.properties by considering server1 described in server.properties.local as web server and server2 as DB server</span>
+             </p>
+
+             <span class="code-title">server_web.properties.local</span>
+             <br>
+             <pre class="code-view">
+server1.user=vagrant
+server1.password=vagrant
+server1.address=127.0.0.1
+server1.port=2230
+server1.keyPath=C:\\fairy_support_run_sample\\.vagrant\\machines\\vm1\\virtualbox\\private_key
+server1.passphrase=
+</pre>
+
+             <span class="code-title">server_db.properties.local</span>
+             <br>
+             <pre class="code-view">
+server1.user=vagrant
+server1.password=vagrant
+server1.address=127.0.0.1
+server1.port=2240
+server1.keyPath=C:\\fairy_support_run_sample\\.vagrant\\machines\\vm2\\virtualbox\\private_key
+server1.passphrase=
+</pre>
+
+             <span class="code-title">server_all.txt</span>
+             <br>
+             <pre class="code-view">
+server_web.properties
+server_db.properties
+</pre>
+
+             <span class="code-title">run_all_apache_test.txt</span>
+             <br>
+             <pre class="code-view">
+apache_test ${ENV} -i server_all.txt
+</pre>
+
+             <span class="code-title">run_apache_test.txt</span>
+             <br>
+             <pre class="code-view">
+apache_test ${ENV} -f server_web.properties
+</pre>
+
+             <span class="code-title">folder tree</span>
+             <br>
+             <pre class="code-view">
+     |-- fairysupport_run
+     |   |-- apache_test
+     |   |   |-- httpd.conf.dev
+     |   |   |-- httpd.conf.local
+     |   |   |-- include.txt
+     |   |   `-- main.sh
+     |   |-- common_test
+     |   |   `-- common.sh
+     |   |-- com_fairysupport_run.jar
+     |   |-- env.txt
+     |   |-- run_apache_test.txt
+     |   |-- run_all_apache_test.txt
+     |   |-- server_all.txt
+     |   |-- server_web.properties.local
+     |   `-- server_db.properties.local
+     |-- vagrant
+     |   `-- Vagrantfile</pre>
+
+             <p>
+                 <span>Created 4 files server_web.properties.local, server_db.properties.local, server_all.txt, run_all_apache_test.txt</span><br>
+                 <span>Modified run_apache_test.txt</span><br>
+                 <span>In run_all_apache_test.txt, server_all.txt is specified with the i option. server_all.txt contains two properties file names</span><br>
+                 <span>As you can see, you can pass the file written the divided properties name to fairy support run using the i option and run the shell on multiple servers</span><br>
+             </p>
+
+             <p>
+                 <span>Let's run</span>
+             </p>
+
+             <pre class="exec-view">
+fairysupport_run.bat run_all_apache_test.txt</pre>
+             </p>
+
+             <pre class="exec-view">
+./fairysupport_run.sh run_all_apache_test.txt</pre>
+             </p>
+
+             <p>
+                 <span>Shell runs on the servers written in server_web.properties.local and server_db.properties.local</span>
+             </p>
+
+             <br>
+             <pre class="exec-view">
+fairysupport_run.bat run_apache_test.txt</pre>
+             </p>
+
+             <pre class="exec-view">
+./fairysupport_run.sh run_apache_test.txt</pre>
+             </p>
+
+             <p>
+                 <span>Shell runs on the only server written in server_web.properties.local</span>
+             </p>
+
+             <br>
+             <p>
+                 <span>On the <a href="mysql_dump.html">next page</a>, we will introduce the functions of fairy support run using mysql dump</span>
+                 <br>
+                 <br>
+                 <span><a href="index.html">table of contents<a></span>
+                 <br>
+             </p>
+
+             <br>
+
+         </section>
+     </article>
+</div>
+<footer class="footer">
+</footer>
+</body>
+</html>

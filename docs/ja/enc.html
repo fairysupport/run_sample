@@ -1,0 +1,156 @@
+<html>
+<head>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>
+構成管理ツールfairy support runで行うサーバー管理入門 基本機能紹介3(パスワード、パスフレーズの暗号化)
+</title>
+<link rel="stylesheet" href="./css/mb/common.css" type="text/css">
+<link rel="stylesheet" href="./css/pc/common.css" type="text/css" media="screen and (min-width:740px)">
+</head>
+<body>
+<header class="header">
+    <div class="title">構成管理ツールfairy&nbsp;support&nbsp;runで行うサーバー管理入門</div>
+</header>
+<div class="body">
+     <div class="table-of-contents-link"><a href="index.html">目次<a></div>
+     <div class="subtitle">基本機能紹介3(パスワード、パスフレーズの暗号化)</div>
+     <article class="article">
+         <section class="first-section">
+             <h1>準備</h1>
+             <p>
+                 <span><a href="mysql_dump.html">前回</a>まではserver.propertiesにパスワードと秘密鍵のパスフレーズをそのまま書いていました</span><br>
+                 <span>今回はパスワードと秘密鍵のパスフレーズを暗号化します</span><br>
+                 <span><a href="https://github.com/fairysupport/run_sample" target="_blank">こちら</a>からサンプルをダウンロードしてください</span>
+             </p>
+         </section>
+         <section>
+             <h1>鍵の作成</h1>
+
+             <p>
+                 <span>下記コマンドで鍵を作成します</span>
+             </p>
+
+             <pre class="exec-view">
+fairysupport_run.bat --keygenerate</pre>
+             </p>
+
+             <pre class="exec-view">
+./fairysupport_run.sh --keygenerate</pre>
+             </p>
+
+             <span class="code-title">ファイル構成</span>
+             <br>
+             <pre class="code-view">
+     |-- fairysupport_run
+     |   |-- com_fairysupport_run.jar
+     |   |-- env.txt
+     |   |-- fairysupport_run_key.txt
+     |   `-- server.properties.local
+</pre>
+
+             <p>
+                 <span>fairysupport_run_key.txtができました</span><br>
+                 <span>これが暗号化復号化するための鍵となります</span>
+             </p>
+
+             <h1>暗号化</h1>
+
+             <p>
+                 <span>作成した鍵を使ってserver.propertiesを暗号化してみましょう</span><br>
+                 <span>kオプションに鍵を指定します</span><br>
+                 <span>fオプションに暗号化したいファイルを指定します</span><br>
+                 <span>oオプションに暗号化後のファイル名を指定します</span>
+             </p>
+
+             <pre class="exec-view">
+fairysupport_run.bat -k fairysupport_run_key.txt -f server.properties -o server_enc.properties</pre>
+             </p>
+
+             <pre class="exec-view">
+./fairysupport_run.sh -k fairysupport_run_key.txt -f server.properties -o server_enc.properties</pre>
+             </p>
+
+             <span class="code-title">ファイル構成</span>
+             <br>
+             <pre class="code-view">
+     |-- fairysupport_run
+     |   |-- com_fairysupport_run.jar
+     |   |-- env.txt
+     |   |-- fairysupport_run_key.txt
+     |   |-- server.properties.local
+     |   `-- server_enc.properties.local
+</pre>
+
+
+             <p>
+                 <span>server_enc.properties.localができました</span><br>
+                 <span>password、passphraseは暗号化されています</span>
+             </p>
+
+
+             <h1>暗号化ファイルを使ってfairy support runの実行</h1>
+             <p>
+                 <span><a href="mysql_dump.html">前回</a>解説したmysql dumpを暗号化ファイルを使って実行してみましょう</span><br>
+                 <span>kオプションに鍵の場所を相対パスで指定します</span><br>
+                 <span>fオプションに暗号化したファイルの場所を相対パスで指定します</span>
+             </p>
+
+             <pre class="exec-view">
+fairysupport_run.bat dump_db_get mysql -k fairysupport_run_key.txt -f server_enc.properties</pre>
+             <pre class="exec-view">
+./fairysupport_run.sh dump_db_get mysql -k fairysupport_run_key.txt -f server_enc.properties</pre>
+
+             <p>
+                 <span>dump_db配下を見てみましょう</span>
+             </p>
+
+             <span class="code-title">ファイル構成</span>
+             <br>
+             <pre class="code-view">
+     |-- fairysupport_run
+     |   |-- common
+     |   |   |-- common.sh
+     |   |   `-- db_user.sh
+     |   |-- dump_db
+     |   |   |-- server_enc_server1
+     |   |   |   `-- mysql
+     |   |   |      `-- YYYYMMDD_HHMMSS
+     |   |   |         `-- mysqldump.sql
+     |   |   `-- server_enc_server2
+     |   |       `-- mysql
+     |   |          `-- YYYYMMDD_HHMMSS
+     |   |             `-- mysqldump.sql
+     |   |-- dump_db_get
+     |   |   |-- get.txt
+     |   |   |-- include.txt
+     |   |   `-- main.sh
+     |   |-- com_fairysupport_run.jar
+     |   |-- env.txt
+     |   |-- fairysupport_run_key.txt
+     |   `-- server_enc.properties.local
+     |-- vagrant
+     |   `-- Vagrantfile</pre>
+
+             <p>
+                 <span>dump_db配下にserver_enc_server1フォルダとserver_enc_server2フォルダが作成されmysql&nbsp;dumpの結果がダウンロードされているのがわかります</span>
+             </p>
+
+             <br>
+             <p>
+                 <span>基本機能の紹介は以上です</span><br>
+                 <span><a href="sample_user.html">次ページ</a>ではfairy&nbsp;support&nbsp;runの使用例を<a href="https://github.com/fairysupport/run_sample" target="_blank">サンプル</a>からいくつか紹介します</span>
+                 <br>
+                 <br>
+                 <span><a href="index.html">目次<a></span>
+                 <br>
+             </p>
+
+             <br>
+
+         </section>
+     </article>
+</div>
+<footer class="footer">
+</footer>
+</body>
+</html>

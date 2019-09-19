@@ -1,0 +1,202 @@
+<html>
+<head>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>
+Introduction to server management with provisioning tool fairy support run Basic function introduction 2(Using mysql dump as an example)
+</title>
+<link rel="stylesheet" href="./css/mb/common.css" type="text/css">
+<link rel="stylesheet" href="./css/pc/common.css" type="text/css" media="screen and (min-width:740px)">
+</head>
+<body>
+<header class="header">
+    <div class="title">Introduction to server management with provisioning tool fairy support run</div>
+</header>
+<div class="body">
+     <div class="table-of-contents-link"><a href="index.html">table of contents<a></div>
+     <div class="subtitle">Basic function introduction 2(Using mysql dump as an example)</div>
+     <article class="article">
+         <section class="first-section">
+             <h1>Prepare</h1>
+             <p>
+                 <span><a href="apache_install.html">Last time</a>, Basic function of fairy support run using apache http server installation were introduced</span><br>
+                 <span>The basic function that could not be introduced last time is introduced using mysql dump as an example this time/span><br>
+                 <span>Speaking is done by the premise in which you have the <a href="apache_install.html">last</a> environment</span><br>
+                 <span>If you have not executed the <a href="apache_install.html">previous</a> contents, please see this page after executing</span><br>
+                 <span>Please download a sample from <a href="https://github.com/fairysupport/run_sample" target="_blank">here</a></span>
+             </p>
+         </section>
+         <section>
+             <h1>Install MySQL</h1>
+
+             <p>
+                 <span>Let's install MySQL to try mysql dump</span><br>
+                 <span>I will explain using a <a href="https://github.com/fairysupport/run_sample" target="_blank">sample</a> file</span>
+             </p>
+
+             <span class="code-title">folder tree</span>
+             <br>
+             <pre class="code-view">
+     |-- fairysupport_run
+     |   |-- common
+     |   |   |-- common.sh
+     |   |   `-- db_user.sh
+     |   |-- mysql
+     |   |   |-- include.txt
+     |   |   |-- my.cnf
+     |   |   `-- main.sh
+     |   |-- com_fairysupport_run.jar
+     |   |-- env.txt
+     |   `-- server.properties.local
+     |-- vagrant
+     |   `-- Vagrantfile</pre>
+
+             <p>
+                 <span>Run fairy support run</span>
+             </p>
+
+             <pre class="exec-view">
+fairysupport_run.bat mysql -f server.properties</pre>
+             </p>
+
+             <pre class="exec-view">
+./fairysupport_run.sh mysql -f server.properties</pre>
+             </p>
+
+
+             <p>
+                 <span>MySQL installed</span>
+             </p>
+
+             <h1>Download of file</h1>
+
+             <p>
+                 <span>Let's create a sample to download mysql dump results</span><br>
+                 <span>I will explain using a <a href="https://github.com/fairysupport/run_sample" target="_blank">sample</a> file</span>
+             </p>
+
+             <span class="code-title">folder tree</span>
+             <br>
+             <pre class="code-view">
+     |-- fairysupport_run
+     |   |-- common
+     |   |   |-- common.sh
+     |   |   `-- db_user.sh
+     |   |-- dump_db
+     |   |-- dump_db_get
+     |   |   |-- get.txt
+     |   |   |-- include.txt
+     |   |   `-- main.sh
+     |   |-- com_fairysupport_run.jar
+     |   |-- env.txt
+     |   `-- server.properties.local
+     |-- vagrant
+     |   `-- Vagrantfile</pre>
+
+             <p>
+                 <span>Let's look at main.sh in dump_db_get</span>
+             </p>
+
+             <span class="code-title">main.sh</span>
+             <br>
+             <pre class="code-view">
+#!/bin/bash
+
+. ../common/common.sh
+. ../common/db_user.sh
+
+validate_arg_num $# 1 "please input database name"
+
+mysqldump -u${db_root_user} -p${db_root_pw} -vvv ${1} > ./mysqldump.sql
+
+</pre>
+
+             <p>
+                 <span>validate_arg_num is defined in common.sh. This function exits with an error message if the number of arguments is less than the second argument (1 in this case)</span><br>
+                 <span>Output result of mysqldump to ./mysqldump.sql</span>
+             </p>
+
+             <br>
+
+             <p>
+                 <span>There is a file called get.txt in the dump_db_get folder</span><br>
+                 <span>If there is a file named get.txt, fairy support run will download the file or folder written in get.txt</span><br>
+                 <span>In get.txt, write the source file or folder name and the destination file or folder name</span><br>
+                 <span>Contents in get.txt is written as source space destination</span><br>
+                 <span>Let's look at get.txt in dump_db_get</span>
+             </p>
+
+             <span class="code-title">get.txt</span>
+             <br>
+             <pre class="code-view">
+mysqldump.sql ../dump_db/${FILE}_${SERVER}/${1}/${DATE}_${HH}${MM}${SS}/mysqldump.sql
+</pre>
+
+             <p>
+                 <span>Contents of get.txt</span><br>
+                 <span>mysqldump.sql is the source file. dump_db_get on the server is the current directory</span><br>
+                 <span>../dump_db/${FILE}_${SERVER}/${1}/${DATE}_${HH}${MM}${SS}/mysqldump.sql is the file after download. Local dump_db_get becomes the current directory</span><br>
+                 <span>The part enclosed in ${} is replaced for by the following</span><br>
+                 <span>${integer}:argument, ${FILE}: Property file name, ${SERVER}: Left side of key period in property file, ${ENV}:contents of env.txt, ${DATE}: Execution date, ${HH}: hour part of the execution time, ${MM}: minute part of the execution time, ${SS}: second part of the execution time</span>
+             </p>
+
+             <h1>Run fairy support run</h1>
+             <p>
+                 <span>Let's run</span><br>
+             <pre class="exec-view">
+fairysupport_run.bat dump_db_get mysql -f server.properties</pre>
+             <pre class="exec-view">
+./fairysupport_run.sh dump_db_get mysql -f server.properties</pre>
+             </p>
+
+             <p>
+                 <span>Let's see under dump_db</span>
+             </p>
+
+             <span class="code-title">folder tree</span>
+             <br>
+             <pre class="code-view">
+     |-- fairysupport_run
+     |   |-- common
+     |   |   |-- common.sh
+     |   |   `-- db_user.sh
+     |   |-- dump_db
+     |   |   |-- server_server1
+     |   |   |   `-- mysql
+     |   |   |      `-- YYYYMMDD_HHMMSS
+     |   |   |         `-- mysqldump.sql
+     |   |   `-- server_server2
+     |   |       `-- mysql
+     |   |          `-- YYYYMMDD_HHMMSS
+     |   |             `-- mysqldump.sql
+     |   |-- dump_db_get
+     |   |   |-- get.txt
+     |   |   |-- include.txt
+     |   |   `-- main.sh
+     |   |-- com_fairysupport_run.jar
+     |   |-- env.txt
+     |   `-- server.properties.local
+     |-- vagrant
+     |   `-- Vagrantfile</pre>
+
+             <p>
+                 <span>You can see the result of mysql dump is downloaded</span>
+             </p>
+
+             <br>
+             <p>
+                 <span>On the <a href="enc.html">next page</a>, we will introduce password and passphrase encryption functions</span>
+                 <br>
+                 <br>
+                 <span><a href="index.html">table of contents<a></span>
+                 <br>
+             </p>
+
+             <br>
+
+         </section>
+     </article>
+</div>
+<footer class="footer">
+</footer>
+</body>
+</html>

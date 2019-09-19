@@ -1,0 +1,68 @@
+<html>
+<head>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>
+構成管理ツールfairy support runで行うサーバー管理入門 サンプル紹介(Webアプリ環境関連)
+</title>
+<link rel="stylesheet" href="./css/mb/common.css" type="text/css">
+<link rel="stylesheet" href="./css/pc/common.css" type="text/css" media="screen and (min-width:740px)">
+</head>
+<body>
+<header class="header">
+    <div class="title">構成管理ツールfairy&nbsp;support&nbsp;runで行うサーバー管理入門</div>
+</header>
+<div class="body">
+     <div class="table-of-contents-link"><a href="index.html">目次<a></div>
+     <div class="subtitle">サンプル紹介(Webアプリ環境関連)</div>
+     <article class="article">
+         <section class="first-section">
+             <h1>準備</h1>
+             <p>
+                 <span><a href="https://github.com/fairysupport/run_sample" target="_blank">こちら</a>からサンプルをダウンロードしてください</span><br>
+                 <span>全て説明不要な簡単なものしかありませんが</span><br>
+                 <span>いくつかを紹介します</span><br>
+                 <span>ダウンロードしてきたサンプル内のvagrantフォルダに移動し</span><br>
+                 <span>vagrant up</span><br>
+                 <span>と入力して仮想環境を起動してください</span>
+             </p>
+         </section>
+         <section>
+             <h1>LAMP環境の構築</h1>
+
+             <p>
+                 <span>Apache、MySQL、PHPの環境を構築してみます</span>
+             </p>
+
+             <pre class="exec-view">
+fairysupport_run.bat run_quick_lamp.txt</pre>
+             </p>
+
+             <pre class="exec-view">
+./fairysupport_run.sh run_quick_lamp.txt</pre>
+             </p>
+
+             <p>
+                 <span>これでLAMPができました</span><br>
+                 <span>ブラウザでhttp://localhost:8080/index.phpにアクセスしてみましょう</span><br>
+                 <span>ブラウザでhttp://localhost:8181/index.phpにアクセスしてみましょう</span><br>
+                 <span>両方とも正常にページが表示されていると思います</span>
+             </p>
+
+             <br>
+             <p>
+                 <span><a href="sample_db.html">次ページ</a>では<a href="https://github.com/fairysupport/run_sample" target="_blank">サンプル</a>からデータベース関連の例を紹介します</span>
+                 <br>
+                 <br>
+                 <span><a href="index.html">目次<a></span>
+                 <br>
+             </p>
+
+             <br>
+
+         </section>
+     </article>
+</div>
+<footer class="footer">
+</footer>
+</body>
+</html>

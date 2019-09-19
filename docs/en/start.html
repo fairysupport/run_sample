@@ -1,0 +1,247 @@
+<html>
+<head>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>
+Introduction to server management with provisioning tool fairy support run Introduction(installation and basic usage)
+</title>
+<link rel="stylesheet" href="./css/mb/common.css" type="text/css">
+<link rel="stylesheet" href="./css/pc/common.css" type="text/css" media="screen and (min-width:740px)">
+</head>
+<body>
+<header class="header">
+    <div class="title">Introduction to server management with provisioning tool fairy support run</div>
+</header>
+<div class="body">
+     <div class="table-of-contents-link"><a href="index.html">table of contents<a></div>
+     <div class="subtitle">Introduction(installation and basic usage)</div>
+     <article class="article">
+         <section class="first-section">
+             <h1>What is a provisioning tool?</h1>
+             <p>
+                 <span>When developing a system, there is work to be done on the server</span><br>
+                 <span>Software installation and settings, user management, application deployment, data insert into the database, etc. . .</span><br>
+                 <span>It automates the work on these servers and allows them to run on multiple servers</span><br>
+                 <span>This page introduces a tool called <a href="https://fairysupport.com/run/index.html" target="_blank">fairy support run</a></span><br>
+                 <span>Sample using fairy support run is uploaded <a href="https://github.com/fairysupport/run_sample" target="_blank">here</a>. Please use freely</span>
+             </p>
+         </section>
+         <section>
+             <h1>The feature of the fairy support run</h1>
+             <p>
+                 <ol class="decimal-list">
+                     <li>
+                         <span>Installation is easy</span><br>
+                         <span>It's downloaded and it's just put in the suitable place</span>
+                     </li>
+                     <li>
+                         <span>There are no learning costs</span><br>
+                         <span>To use fairy support run, write a shell</span><br>
+                         <span>Anyone who can write shells can use it right away</span><br>
+                         <span>Other provisioning tools use tool specific writing using YAML, JSON, etc</span><br>
+                         <span>In that case, just rewrite the shell with the notation specific to each tool.</span><br>
+                         <span>In fairy support run there is no cost to learn such a tool-specific notation</span>
+                     </li>
+                     <li>
+                         <span>It doesn't become wasteful that it was learned</span><br>
+                         <span>A few years later, you may switch to a new tool or you may use a different tool depending on where you moved</span><br>
+                         <span>In that case, if you use a tool that writes in a specific notation, you will not be able to use the acquired knowledge</span><br>
+                         <span>The only thing to remember when using fairy support run is the shell</span><br>
+                         <span>Whatever tool is used in your assignment, that you remember a shell never becomes wasteful</span><br>
+                         <span>You're unlikely to be in an environment where you can't use the shell in future engineer life</span><br>
+                     </li>
+                     <li>
+                         <span>Existing assets can be reused</span><br>
+                         <span>If you are currently assigned to a department that does not use a provisioning tool, you can use the shell which was written and saved formerly</span>
+                     </li>
+                     <li>
+                         <span>The deliverables is not wasted/span><br>
+                         <span>A few years later, you may switch to a new tool, or the version of the tool will rises, and the deliverables may become unusable</span><br>
+                         <span>The only deliverables you create to use fairy support run is a shell. The shell itself works without fairy support run and can be used in the future</span>
+                     </li>
+                 </ol>
+             </p>
+         </section>
+         <section>
+             <h1>Try fairy support run</h1>
+             <p>
+                 <span>try it out</span>
+             </p>
+             <h2>Install fairy support run</h2>
+             <p>
+                 <span>Download <a href="https://github.com/fairysupport/run/raw/master/demo/com_fairysupport_run.jar">com_fairysupport_run.jar</a> and put it in a suitable folder</span>
+             </p>
+             <h2>Install Java</h2>
+             <p>
+                 <span>Java is required to run fairy support run. Please install Java</span><br>
+                 <span>To install Java, download and decompress the file for your OS from <a href="https://jdk.java.net/archive/" target="_blank">here</a></span><br>
+                 <span>Create an environment variable called JAVA_HOME and set the decompressed folder to the value</span><br>
+                 <span>Add bin folder in the decompressed folder to environment variable PATH</span><br>
+                 <span>Java installation is complete</span>
+             </p>
+             <h2>Install VirtualBox, Vagrant</h2>
+             <p>
+                 <span>Use VirtualBox and Vagrant as an environment to try fairy support run</span><br>
+                 <span>Download and install from <a href="https://www.vagrantup.com/downloads.html" target="_blank">here</a></span>
+             </p>
+             <h2>Starting the trial environment</h2>
+             <p>
+                 <span>Create a folder appropriately.I tried making a folder called fairy_support_run_sample</span><br>
+                 <span>Create a file called Vagrantfile in it</span><br>
+                 <span>The contents of Vagrantfile are the following</span>
+             </p>
+
+             <span class="code-title">Vagrantfile</span>
+             <br>
+             <pre class="code-view">
+Vagrant.configure("2") do |config|
+  config.vm.box = "centos/7"
+
+  config.vm.define :vm1 do |server|
+    server.vm.hostname = "vm1"
+    server.vm.network "private_network", ip: "192.168.33.10"
+    server.vm.network "forwarded_port", guest: 80, host: 8080, host_ip: "127.0.0.1"
+    server.vm.network "forwarded_port", guest: 22, host: 2230, host_ip: "127.0.0.1"
+  end
+
+  config.vm.define :vm2 do |server|
+    server.vm.hostname = "vm2"
+    server.vm.network "private_network", ip: "192.168.33.11"
+    server.vm.network "forwarded_port", guest: 80, host: 8181, host_ip: "127.0.0.1"
+    server.vm.network "forwarded_port", guest: 22, host: 2240, host_ip: "127.0.0.1"
+  end
+end
+</pre>
+
+             <span class="code-title">folder tree</span>
+             <br>
+             <pre class="code-view">
+|-- fairy_support_run_sample
+|   `-- Vagrantfile</pre>
+
+             <p>
+                 <span>Go to fairy_support_run_sample on the command line</span><br>
+                 <span>Enter vagrant up</span>
+             </p>
+             <pre class="exec-view">
+cd fairy_support_run_sample
+vagrant up</pre>
+
+             <p>
+                 <span>When you start VirtualBox Manager, you can see that two virtual environments are running</span>
+             </p>
+
+             <h2>Setting of fairy support run</h2>
+             <p>
+                 <span>The environment was complete, Let's set fairy support run. First, describe the information of server</span><br>
+                 <span>Create a file called server.properties in the same hierarchy as the downloaded com_fairysupport_run.jar</span><br>
+                 <span>Write the username, password, server address, port, private key pass, private key passphrase to enter the server. passphrase is blank because the centos/7 box has no passphrase for the private key</span><br>
+                 <span>\ is repeated two times</span>
+             </p>
+             <span class="code-title">server.properties</span>
+             <br>
+             <pre class="code-view">
+server1.user=vagrant
+server1.password=vagrant
+server1.address=127.0.0.1
+server1.port=2230
+server1.keyPath=C:\\fairy_support_run_sample\\.vagrant\\machines\\vm1\\virtualbox\\private_key
+server1.passphrase=
+
+server2.user=vagrant
+server2.password=vagrant
+server2.address=127.0.0.1
+server2.port=2240
+server2.keyPath=C:\\fairy_support_run_sample\\.vagrant\\machines\\vm2\\virtualbox\\private_key
+server2.passphrase=
+</pre>
+
+             <p>
+                 <span>Create a shell that runs on the server</span><br>
+                 <span>Create a folder called test in the same hierarchy as the downloaded com_fairysupport_run.jar</span><br>
+                 <span>Create a file called main.sh in the created folder called test</span><br>
+                 <span>This time it's just a shell that runs the hostname command</span><br>
+                 <span>Make sure that CR is not included in the line feed code. Save as LF instead of CR+LF</span>
+             </p>
+             <span class="code-title">main.sh</span>
+             <br>
+             <pre class="code-view">
+#!/bin/bash
+
+hostname
+</pre>
+
+             <span class="code-title">folder tree</span>
+             <br>
+             <pre class="code-view">
+|-- fairysupport_test
+|   |-- com_fairysupport_run.jar
+|   |-- server.properties
+|   `-- test
+|       `-- main.sh</pre>
+
+             <h2>Run of fairy support run</h2>
+             <p>
+                 <span>I'm done with settings so I'll try</span><br>
+                 <span>Go to the folder that put com_fairysupport_run.jar by a command line</span><br>
+                 <span>Enter java -jar com_fairysupport_run.jar test</span><br>
+                 <span>The test given to the argument is the name of the folder created earlier</span>
+             </p>
+             <pre class="exec-view">
+cd fairysupport_test
+java -jar com_fairysupport_run.jar test</pre>
+
+             <span class="code-title">result</span>
+             <br>
+             <pre class="exec-view">
+-----------------------------------------------------------------------------------------------------------------------
+[start][127.0.0.1:2240]
+
+....
+
+[run main.sh][127.0.0.1:2240]
+cd /home/vagrant/com_fairysupport_run/test && ./main.sh
+vm2
+[delete file][127.0.0.1:2240]
+
+....
+
+[end][127.0.0.1:2240]
+-----------------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------
+[start][127.0.0.1:2230]
+
+....
+
+[run main.sh][127.0.0.1:2230]
+cd /home/vagrant/com_fairysupport_run/test && ./main.sh
+vm1
+[delete file][127.0.0.1:2230]
+
+....
+
+[end][127.0.0.1:2230]
+-----------------------------------------------------------------------------------------------------------------------</pre>
+
+             <p>
+                 <span>If you look at [run main.sh], you can see that main.sh was run</span><br>
+                 <span>Looking at the displayed content, you can see that fairy support run is a very simple movement</span><br>
+                 <span>Upload the file in the folder given by the argument, it automatically performs the task of running main.sh</span><br>
+                 <span>That's all for the basic usage</span><br>
+                 <span>In addition, there is a file download function, a function to upload other folders, a server.properties switching function, etc.</span><br>
+                 <span>Introducing various usages using <a href="https://github.com/fairysupport/run_sample" target="_blank">samples</a> from the next page</span><br>
+                 <span>On the <a href="apache_install.html">next page</a>, we will introduce the functions of fairy support run using apache http server installation</span>
+                 <br>
+                 <br>
+                 <span><a href="index.html">table of contents<a></span>
+                 <br>
+             </p>
+
+             <br>
+
+         </section>
+     </article>
+</div>
+<footer class="footer">
+</footer>
+</body>
+</html>

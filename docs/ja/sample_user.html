@@ -1,0 +1,131 @@
+<html>
+<head>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>
+構成管理ツールfairy support runで行うサーバー管理入門 サンプル紹介(ユーザー関連)
+</title>
+<link rel="stylesheet" href="./css/mb/common.css" type="text/css">
+<link rel="stylesheet" href="./css/pc/common.css" type="text/css" media="screen and (min-width:740px)">
+</head>
+<body>
+<header class="header">
+    <div class="title">構成管理ツールfairy&nbsp;support&nbsp;runで行うサーバー管理入門</div>
+</header>
+<div class="body">
+     <div class="table-of-contents-link"><a href="index.html">目次<a></div>
+     <div class="subtitle">サンプル紹介(ユーザー関連)</div>
+     <article class="article">
+         <section class="first-section">
+             <h1>準備</h1>
+             <p>
+                 <span><a href="https://github.com/fairysupport/run_sample" target="_blank">こちら</a>からサンプルをダウンロードしてください</span><br>
+                 <span>全て説明不要な簡単なものしかありませんが</span><br>
+                 <span>いくつかを紹介します</span><br>
+                 <span>ダウンロードしてきたサンプル内のvagrantフォルダに移動し</span><br>
+                 <span>vagrant up</span><br>
+                 <span>と入力して仮想環境を起動してください</span>
+             </p>
+         </section>
+         <section>
+             <h1>ユーザー追加</h1>
+
+             <p>
+                 <span>newuserというユーザーを新たに作成します</span>
+             </p>
+
+             <pre class="exec-view">
+fairysupport_run.bat useradd newuser</pre>
+             </p>
+
+             <pre class="exec-view">
+./fairysupport_run.sh useradd newuser</pre>
+             </p>
+
+             <p>
+                 <span>New password:と表示されるのでnewuserのパスワードを入力する</span><br>
+                 <span>ユーザー追加完了です</span>
+             </p>
+
+             <h1>公開鍵の設定</h1>
+
+             <p>
+                 <span>秘密鍵公開鍵のペアを用意してください(ここでは秘密鍵公開鍵の作成方法は割愛します)</span><br>
+                 <span>sshkeyフォルダの中にpubkeyというフォルダを作成します</span><br>
+                 <span>pubkeyフォルダにnewuserの公開鍵を入れます</span><br>
+                 <span>公開鍵のファイル名をnewuserにします(公開鍵のファイル名をユーザー名にするということ)</span>
+             </p>
+
+             <span class="code-title">ファイル構成</span>
+             <br>
+             <pre class="code-view">
+     |-- fairysupport_run
+     |   |-- common
+     |   |   `-- common.sh
+     |   |-- sshkey
+     |   |   |-- pubkey
+     |   |   |   `-- newuser
+     |   |   |-- include.txt
+     |   |   `-- main.sh
+     |   |-- com_fairysupport_run.jar
+     |   |-- env.txt
+     |   `-- server.properties.local
+     |-- vagrant
+     |   `-- Vagrantfile</pre>
+
+
+             <p>
+                 <span>実行します</span>
+             </p>
+
+             <pre class="exec-view">
+fairysupport_run.bat sshkey</pre>
+             </p>
+
+             <pre class="exec-view">
+./fairysupport_run.sh sshkey</pre>
+             </p>
+
+             <p>
+                 <span>pubkey内のファイルが各ユーザーのホームディレクトリ配下の.ssh/authorized_keysになり</span><br>
+                 <span>公開鍵認証でログインできるようになります</span>
+             </p>
+
+             <h1>ユーザーをグループに追加する</h1>
+
+             <p>
+                 <span>新たに作成したnewuserをwheelグループに追加してみます</span>
+             </p>
+
+             <pre class="exec-view">
+fairysupport_run.bat gpasswd newuser wheel</pre>
+             </p>
+
+             <pre class="exec-view">
+./fairysupport_run.sh gpasswd newuser whee</pre>
+             </p>
+
+             <p>
+                 <span>newuserがwheelグループに追加されました</span>
+             </p>
+
+
+
+
+             <br>
+             <p>
+                 <span><a href="sample_web.html">次ページ</a>では<a href="https://github.com/fairysupport/run_sample" target="_blank">サンプル</a>からWebアプリの環境構築例を紹介します</span>
+                 <br>
+                 <br>
+                 <span><a href="index.html">目次<a></span>
+                 <br>
+             </p>
+
+             <br>
+
+         </section>
+     </article>
+</div>
+<footer class="footer">
+</footer>
+</body>
+</html>

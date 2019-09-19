@@ -1,0 +1,692 @@
+<html>
+<head>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>
+Introduction to server management with provisioning tool fairy support run sample introduction(database)
+</title>
+<link rel="stylesheet" href="./css/mb/common.css" type="text/css">
+<link rel="stylesheet" href="./css/pc/common.css" type="text/css" media="screen and (min-width:740px)">
+</head>
+<body>
+<header class="header">
+    <div class="title">Introduction to server management with provisioning tool fairy support run</div>
+</header>
+<div class="body">
+     <div class="table-of-contents-link"><a href="index.html">table of contents<a></div>
+     <div class="subtitle">Sample introduction(database)</div>
+     <article class="article">
+         <section class="first-section">
+             <h1>Prepare</h1>
+             <p>
+                 <span>Please download a sample from <a href="https://github.com/fairysupport/run_sample" target="_blank">here</a></span><br>
+                 <span>There are only simple things that don't need any explanation, but Some will be introduced</span><br>
+                 <span>Go to the vagrant folder in the downloaded sample and enter vagrant up to start the virtual environment</span>
+             </p>
+         </section>
+         <section>
+             <h1>Execute SQL</h1>
+
+             <h2>Add user</h2>
+             <p>
+                 <span>Create a new user called newuser in MySQL</span><br>
+                 <span>Create sql folder</span><br>
+                 <span>Create an input folder under the sql folder</span><br>
+                 <span>Create a user folder under the input folder</span><br>
+                 <span>Create 00001.sql in the user folder</span>
+             </p>
+
+             <span class="code-title">00001.sql</span>
+             <br>
+             <pre class="code-view">
+CREATE USER 'newuser'@'localhost' IDENTIFIED WITH mysql_native_password BY 'newuser_password';
+GRANT ALL ON *.* TO 'newuser'@'localhost' WITH GRANT OPTION;
+FLUSH PRIVILEGES;
+</pre>
+
+             <span class="code-title">folder tree</span>
+             <br>
+             <pre class="code-view">
+     |-- fairysupport_run
+     |   |-- common
+     |   |   |-- common.sh
+     |   |   `-- db_user.sh
+     |   |-- sql
+     |   |   `-- input
+     |   |       `-- user
+     |   |           `-- 00001.sql
+     |   |-- sql_exe
+     |   |   |-- get.txt
+     |   |   |-- include.txt
+     |   |   `-- main.sh
+     |   |-- com_fairysupport_run.jar
+     |   |-- env.txt
+     |   `-- server.properties.local
+     |-- vagrant
+     |   `-- Vagrantfile</pre>
+
+             <p>
+                 <span>include.txt and get.txt under sql_exe folder are as follows</span>
+             </p>
+
+             <span class="code-title">include.txt</span>
+             <br>
+             <pre class="code-view">
+../common
+../sql/input/${2}
+</pre>
+
+             <span class="code-title">get.txt</span>
+             <br>
+             <pre class="code-view">
+output ../sql/output/${2}/${FILE}_${SERVER}/${DATE}_${HH}${MM}${SS}
+</pre>
+
+
+             <p>
+                 <span>Let's run</span><br>
+                 <span>Run sql_exe</span><br>
+                 <span>The argument mysql is the database name on MySQL that executes SQL</span><br>
+                 <span>The argument user is the folder name under the sql&gt;input folder</span><br>
+             </p>
+
+             <pre class="exec-view">
+fairysupport_run.bat sql_exe mysql user</pre>
+             </p>
+
+             <pre class="exec-view">
+./fairysupport_run.sh sql_exe mysql user</pre>
+             </p>
+
+             <p>
+                 <span>output folder is created</span><br>
+                 <span style="white-space: nowrap">Let's look at 00001.sql under the output&gt;user&gt;server_server1&gt;YYYYMMDD_HHMMSS, output&gt;user&gt;server_server2&gt;YYYYMMDD_HHMMSS folder</span>
+             </p>
+
+             <span class="code-title">folder tree</span>
+             <br>
+             <pre class="code-view">
+     |-- fairysupport_run
+     |   |-- common
+     |   |   |-- common.sh
+     |   |   `-- db_user.sh
+     |   |-- sql
+     |   |   |-- input
+     |   |   |   `-- user
+     |   |   |       `-- 00001.sql
+     |   |   `-- output
+     |   |       `-- user
+     |   |           |-- server_server1
+     |   |           |   `-- YYYYMMDD_HHMMSS
+     |   |           |       `-- 00001.sql
+     |   |           `-- server_server2
+     |   |               `-- YYYYMMDD_HHMMSS
+     |   |                   `-- 00001.sql
+     |   |-- sql_exe
+     |   |   |-- get.txt
+     |   |   |-- include.txt
+     |   |   `-- main.sh
+     |   |-- com_fairysupport_run.jar
+     |   |-- env.txt
+     |   `-- server.properties.local
+     |-- vagrant
+     |   `-- Vagrantfile</pre>
+
+             <p>
+                 <span>You can see that newuser has been created</span>
+             </p>
+
+             <br>
+
+             <p>
+                 <span>Let's improve 00001.sql a little</span>
+             </p>
+
+             <span class="code-title">00001.sql</span>
+             <br>
+             <pre class="code-view">
+CREATE USER '${_ARG3}'@'localhost' IDENTIFIED WITH mysql_native_password BY '${_ARG4}';
+GRANT ALL ON *.* TO '${_ARG3}'@'localhost' WITH GRANT OPTION;
+FLUSH PRIVILEGES;
+</pre>
+
+             <p>
+                 <span>Let's run</span><br>
+                 <span>two arguments are increased</span>
+             </p>
+
+             <pre class="exec-view">
+fairysupport_run.bat sql_exe mysql user newuser2 newuser2_password</pre>
+             </p>
+
+             <pre class="exec-view">
+./fairysupport_run.sh sql_exe mysql user newuser2 newuser2_password</pre>
+             </p>
+
+             <p>
+                 <span>newuser2 is created</span>
+             </p>
+
+             <h2>Create database</h2>
+             <p>
+                 <span>Create a new database on MySQL</span><br>
+                 <span>Create db folder under sql&gt;input folder</span><br>
+                 <span>Create 00001.sql in the db folder</span>
+             </p>
+
+             <span class="code-title">00001.sql</span>
+             <br>
+             <pre class="code-view">
+CREATE DATABASE NEW_DB;
+</pre>
+
+             <span class="code-title">folder tree</span>
+             <br>
+             <pre class="code-view">
+     |-- fairysupport_run
+     |   |-- common
+     |   |   |-- common.sh
+     |   |   `-- db_user.sh
+     |   |-- sql
+     |   |   `-- input
+     |   |       `-- db
+     |   |           `-- 00001.sql
+     |   |-- sql_exe
+     |   |   |-- get.txt
+     |   |   |-- include.txt
+     |   |   `-- main.sh
+     |   |-- com_fairysupport_run.jar
+     |   |-- env.txt
+     |   `-- server.properties.local
+     |-- vagrant
+     |   `-- Vagrantfile</pre>
+
+             <p>
+                 <span>Let's run</span>
+             </p>
+
+             <pre class="exec-view">
+fairysupport_run.bat sql_exe mysql db</pre>
+             </p>
+
+             <pre class="exec-view">
+./fairysupport_run.sh sql_exe mysql db</pre>
+             </p>
+
+             <p>
+                 <span>output&gt;db folder is created</span>
+             </p>
+
+             <span class="code-title">folder tree</span>
+             <br>
+             <pre class="code-view">
+     |-- fairysupport_run
+     |   |-- common
+     |   |   |-- common.sh
+     |   |   `-- db_user.sh
+     |   |-- sql
+     |   |   |-- input
+     |   |   |   `-- db
+     |   |   |       `-- 00001.sql
+     |   |   `-- output
+     |   |       `-- db
+     |   |           |-- server_server1
+     |   |           |   `-- YYYYMMDD_HHMMSS
+     |   |           |       `-- 00001.sql
+     |   |           `-- server_server2
+     |   |               `-- YYYYMMDD_HHMMSS
+     |   |                   `-- 00001.sql
+     |   |-- sql_exe
+     |   |   |-- get.txt
+     |   |   |-- include.txt
+     |   |   `-- main.sh
+     |   |-- com_fairysupport_run.jar
+     |   |-- env.txt
+     |   `-- server.properties.local
+     |-- vagrant
+     |   `-- Vagrantfile</pre>
+
+             <p>
+                 <span>You can see that NEW_DB has been created</span>
+             </p>
+
+             <h1>Create table</h1>
+
+             <h2>Creating the first table</h2>
+             <p>
+                 <span>Create a table for the first time on MySQL</span><br>
+                 <span>create sql_version folder</span><br>
+                 <span>Create an input folder under the sql_version folder</span><br>
+                 <span>Create an table folder under the sql_version&gt;input folder</span><br>
+                 <span>Create 000000001 folder under sql_version&gt;input&gt;table folder</span><br>
+                 <span>Create 00001_SAMPLE_1.sql in the 000000001 folder</span><br>
+                 <span>Create 00002_SAMPLE_2.sql in the 000000001 folder</span>
+             </p>
+
+             <span class="code-title">00001_SAMPLE_1.sql</span>
+             <br>
+             <pre class="code-view">
+CREATE TABLE SAMPLE_1 (
+  ID int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  NAME varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8</pre>
+
+             <span class="code-title">00002_SAMPLE_2.sql</span>
+             <br>
+             <pre class="code-view">
+CREATE TABLE SAMPLE_2 (
+  ID int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  NAME varchar(255) NOT NULL,
+  SAMPLE_1_ID int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8</pre>
+
+
+             <span class="code-title">folder tree</span>
+             <br>
+             <pre class="code-view">
+     |-- fairysupport_run
+     |   |-- common
+     |   |   |-- common.sh
+     |   |   `-- db_user.sh
+     |   |-- sql_version
+     |   |   `-- input
+     |   |       `-- table
+     |   |           `-- 000000001
+     |   |               |-- 00001_SAMPLE_1.sql
+     |   |               `-- 00002_SAMPLE_2.sql
+     |   |-- sql_version_exe
+     |   |   |-- get.txt
+     |   |   |-- include.txt
+     |   |   `-- main.sh
+     |   |-- com_fairysupport_run.jar
+     |   |-- env.txt
+     |   `-- server.properties.local
+     |-- vagrant
+     |   `-- Vagrantfile</pre>
+
+             <p>
+                 <span>include.txt and get.txt under sql_version_exe folder are as follows</span>
+             </p>
+
+             <span class="code-title">include.txt</span>
+             <br>
+             <pre class="code-view">
+../common
+../sql_version/input/${2}
+</pre>
+
+             <span class="code-title">get.txt</span>
+             <br>
+             <pre class="code-view">
+output ../sql_version/output/${2}/${FILE}_${SERVER}/${DATE}_${HH}${MM}${SS}
+</pre>
+
+
+             <p>
+                 <span>Let's run</span><br>
+                 <span>Run sql_version_exe</span><br>
+                 <span>The argument NEW_DB is the name of the database on MySQL that executes SQL. This time we will run on the NEW_DB created earlier</span><br>
+                 <span>The argument table is the folder name under the sql_version&gt;input folder</span><br>
+                 <span>Two 1 are given as arguments. It is the 000000001 folder under the sql_version&gt;input&gt;table folder</span><br>
+                 <span>sql_version_exe can be executed by specifying a range such as executing files in folders from 000000001 to 000000003</span><br>
+                 <span>This time, it will execute the file that is in the folder from 000000001 to 000000001</span>
+             </p>
+
+             <pre class="exec-view">
+fairysupport_run.bat sql_version_exe NEW_DB table 1 1</pre>
+             </p>
+
+             <pre class="exec-view">
+./fairysupport_run.sh sql_version_exe NEW_DB table 1 1</pre>
+             </p>
+
+             <p>
+                 <span>sql_version&gt;output folder is made. Let's see</span>
+             </p>
+
+             <span class="code-title">folder tree</span>
+             <br>
+             <pre class="code-view">
+     |-- fairysupport_run
+     |   |-- common
+     |   |   |-- common.sh
+     |   |   `-- db_user.sh
+     |   |-- sql_version
+     |   |   |-- input
+     |   |   |   `-- table
+     |   |   |       `-- 000000001
+     |   |   |           |-- 00001_SAMPLE_1.sql
+     |   |   |           `-- 00002_SAMPLE_2.sql
+     |   |   `-- output
+     |   |       `-- table
+     |   |           |-- server_server1
+     |   |           |   `-- YYYYMMDD_HHMMSS
+     |   |           |       `-- 000000001
+     |   |           |           |-- 00001_SAMPLE_1.sql
+     |   |           |           `-- 00002_SAMPLE_2.sql
+     |   |           `-- server_server2
+     |   |               `-- YYYYMMDD_HHMMSS
+     |   |                   `-- 000000001
+     |   |                       |-- 00001_SAMPLE_1.sql
+     |   |                       `-- 00002_SAMPLE_2.sql
+     |   |-- sql_version_exe
+     |   |   |-- get.txt
+     |   |   |-- include.txt
+     |   |   `-- main.sh
+     |   |-- com_fairysupport_run.jar
+     |   |-- env.txt
+     |   `-- server.properties.local
+     |-- vagrant
+     |   `-- Vagrantfile</pre>
+
+             <p>
+                 <span>You can see that the table was created</span>
+             </p>
+
+             <h2>Create and alter of a table at 2nd and subsequent </h2>
+             <p>
+                 <span>Assuming development was more progressed after the first time release, and that you needed a new table</span><br>
+                 <span>Create a 000000002 folder under the sql_version&gt;input&gt;table folder</span><br>
+                 <span>Create 00001_SAMPLE_3.sql under the 000000002 folder</span><br>
+             </p>
+
+             <span class="code-title">00001_SAMPLE_3.sql</span>
+             <br>
+             <pre class="code-view">
+CREATE TABLE SAMPLE_3 (
+  ID int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  NAME varchar(255) NOT NULL,
+  SAMPLE_1_ID int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8</pre>
+
+             <p>
+                 <span>Assuming development was more progressed after a new table is released, and that you need to add columns on the table</span><br>
+                 <span>Create a 000000003 folder under the sql_version&gt;input&gt;table folder</span><br>
+                 <span>Create 00001_SAMPLE_1.sql in the 000000003 folder</span><br>
+             </p>
+
+             <span class="code-title">00001_SAMPLE_1.sql</span>
+             <br>
+             <pre class="code-view">
+ALTER TABLE SAMPLE_1 ADD NEW_COL varchar(10);</pre>
+
+             <span class="code-title">folder tree</span>
+             <br>
+             <pre class="code-view">
+     |-- fairysupport_run
+     |   |-- common
+     |   |   |-- common.sh
+     |   |   `-- db_user.sh
+     |   |-- sql_version
+     |   |   `-- input
+     |   |       `-- table
+     |   |           |-- 000000001
+     |   |           |   |-- 00001_SAMPLE_1.sql
+     |   |           |   `-- 00002_SAMPLE_2.sql
+     |   |           |-- 000000002
+     |   |           |   `-- 00001_SAMPLE_3.sql
+     |   |           `-- 000000003
+     |   |               `-- 00001_SAMPLE_1.sql
+     |   |-- sql_version_exe
+     |   |   |-- get.txt
+     |   |   |-- include.txt
+     |   |   `-- main.sh
+     |   |-- com_fairysupport_run.jar
+     |   |-- env.txt
+     |   `-- server.properties.local
+     |-- vagrant
+     |   `-- Vagrantfile</pre>
+
+             <p>
+                 <span>Set the environment in the first time release state to the version3 state</span><br>
+                 <span>If you look under the sql_version&gt;output folder, you can see up to which version</span><br>
+                 <span>Let's run</span><br>
+                 <span>Arguments 2&nbsp;3 do not execute SQL under the 000000002 and 000000003 folders, but execute SQL under the from 000000002 to 000000003 folders</span><br>
+                 <span>If you have created up to 000000004 folder, if you give 2&nbsp;4 in the argument, SQL under 000000002, 000000003, 000000004 folder will be executed</span>
+             </p>
+
+             <pre class="exec-view">
+fairysupport_run.bat sql_version_exe NEW_DB table 2 3</pre>
+             </p>
+
+             <pre class="exec-view">
+./fairysupport_run.sh sql_version_exe NEW_DB table 2 3</pre>
+             </p>
+
+             <p>
+                 <span>SQL under the 000000002 and 000000003 folders was executed</span>
+             </p>
+
+             <h1>Execute INSERT</h1>
+
+             <p>
+                 <span>Now that the table has been created, let's insert data using sql_exe</span><br>
+                 <span>Create an insert folder under the sql&gt;input folder</span><br>
+                 <span>Create 00001.sql under the insert folder</span><br>
+                 <span>Create 00002.sql under the insert folder</span>
+             </p>
+
+             <span class="code-title">00001.sql</span>
+             <br>
+             <pre class="code-view">
+INSERT INTO SAMPLE_1 (NAME, NEW_COL) VALUES ('sample1_name1', 'val1')
+</pre>
+
+             <span class="code-title">00002.sql</span>
+             <br>
+             <pre class="code-view">
+INSERT INTO SAMPLE_2 (NAME, SAMPLE_1_ID) SELECT 'sample2_name1', ID FROM SAMPLE_1
+</pre>
+
+             <span class="code-title">folder tree</span>
+             <br>
+             <pre class="code-view">
+     |-- fairysupport_run
+     |   |-- common
+     |   |   |-- common.sh
+     |   |   `-- db_user.sh
+     |   |-- sql
+     |   |   `-- input
+     |   |       `-- insert
+     |   |           |-- 00001.sql
+     |   |           `-- 00002.sql
+     |   |-- sql_exe
+     |   |   |-- get.txt
+     |   |   |-- include.txt
+     |   |   `-- main.sh
+     |   |-- com_fairysupport_run.jar
+     |   |-- env.txt
+     |   `-- server.properties.local
+     |-- vagrant
+     |   `-- Vagrantfile</pre>
+
+             <p>
+                 <span>Let's run</span>
+             </p>
+
+             <pre class="exec-view">
+fairysupport_run.bat sql_exe NEW_DB insert</pre>
+             </p>
+
+             <pre class="exec-view">
+./fairysupport_run.sh sql_exe NEW_DB insert</pre>
+             </p>
+
+             <p>
+                 <span>output&gt;insert folder is made</span>
+             </p>
+
+             <span class="code-title">folder tree</span>
+             <br>
+             <pre class="code-view">
+     |-- fairysupport_run
+     |   |-- common
+     |   |   |-- common.sh
+     |   |   `-- db_user.sh
+     |   |-- sql
+     |   |   |-- input
+     |   |   |   `-- insert
+     |   |   |       |-- 00001.sql
+     |   |   |       `-- 00002.sql
+     |   |   `-- output
+     |   |       `-- insert
+     |   |           |-- server_server1
+     |   |           |   `-- YYYYMMDD_HHMMSS
+     |   |           |       |-- 00001.sql
+     |   |           |       `-- 00002.sql
+     |   |           `-- server_server2
+     |   |               `-- YYYYMMDD_HHMMSS
+     |   |                   |-- 00001.sql
+     |   |                   `-- 00002.sql
+     |   |-- sql_exe
+     |   |   |-- get.txt
+     |   |   |-- include.txt
+     |   |   `-- main.sh
+     |   |-- com_fairysupport_run.jar
+     |   |-- env.txt
+     |   `-- server.properties.local
+     |-- vagrant
+     |   `-- Vagrantfile</pre>
+
+             <p>
+                 <span>You can see that the INSERT statement was executed</span>
+             </p>
+
+             <h1>export data</h1>
+
+             <p>
+                 <span>Let's export data</span>
+             </p>
+
+             <span class="code-title">folder tree</span>
+             <br>
+             <pre class="code-view">
+     |-- fairysupport_run
+     |   |-- common
+     |   |   |-- common.sh
+     |   |   `-- db_user.sh
+     |   |-- dump_db_get
+     |   |   |-- get.txt
+     |   |   |-- include.txt
+     |   |   `-- main.sh
+     |   |-- com_fairysupport_run.jar
+     |   |-- env.txt
+     |   `-- server.properties.local
+     |-- vagrant
+     |   `-- Vagrantfile</pre>
+
+             <p>
+                 <span>Let's run</span>
+             </p>
+
+             <pre class="exec-view">
+fairysupport_run.bat dump_db_get NEW_DB</pre>
+             </p>
+
+             <pre class="exec-view">
+./fairysupport_run.sh dump_db_get NEW_DB</pre>
+             </p>
+
+             <p>
+                 <span>dump_db folder is created</span>
+             </p>
+
+             <span class="code-title">folder tree</span>
+             <br>
+             <pre class="code-view">
+     |-- fairysupport_run
+     |   |-- common
+     |   |   |-- common.sh
+     |   |   `-- db_user.sh
+     |   |-- dump_db
+     |   |   |-- server_server1
+     |   |   |   `-- NEW_DB
+     |   |   |       `-- YYYYMMDD_HHMMSS
+     |   |   |           `-- mysqldump.sql
+     |   |   `-- server_server2
+     |   |       `-- NEW_DB
+     |   |           `-- YYYYMMDD_HHMMSS
+     |   |               `-- mysqldump.sql
+     |   |-- dump_db_get
+     |   |   |-- get.txt
+     |   |   |-- include.txt
+     |   |   `-- main.sh
+     |   |-- com_fairysupport_run.jar
+     |   |-- env.txt
+     |   `-- server.properties.local
+     |-- vagrant
+     |   `-- Vagrantfile</pre>
+
+             <p>
+                 <span>If you look at the mysqldump.sql file, you can see that the data is exported</span>
+             </p>
+
+             <h1>Import data</h1>
+
+             <p>
+                 <span>Let's import data</span>
+             </p>
+
+             <span class="code-title">folder tree</span>
+             <br>
+             <pre class="code-view">
+     |-- fairysupport_run
+     |   |-- common
+     |   |   |-- common.sh
+     |   |   `-- db_user.sh
+     |   |-- dump_db
+     |   |   |-- server_server1
+     |   |   |   `-- NEW_DB
+     |   |   |       `-- YYYYMMDD_HHMMSS
+     |   |   |           `-- mysqldump.sql
+     |   |   `-- server_server2
+     |   |       `-- NEW_DB
+     |   |           `-- YYYYMMDD_HHMMSS
+     |   |               `-- mysqldump.sql
+     |   |-- dump_db_set
+     |   |   |-- include.txt
+     |   |   `-- main.sh
+     |   |-- com_fairysupport_run.jar
+     |   |-- env.txt
+     |   `-- server.properties.local
+     |-- vagrant
+     |   `-- Vagrantfile</pre>
+
+             <p>
+                 <span>Let's run</span><br>
+                 <span>Change the YYYYMMDD_HHMMSS part of the argument to the actual folder name under dump_db&gt;server_server1&gt;NEW_DB</span>
+             </p>
+
+             <pre class="exec-view">
+fairysupport_run.bat dump_db_set NEW_DB YYYYMMDD_HHMMSS</pre>
+             </p>
+
+             <pre class="exec-view">
+./fairysupport_run.sh dump_db_set NEW_DB YYYYMMDD_HHMMSS</pre>
+             </p>
+
+             <p>
+                 <span>mysqldump was executed</span>
+             </p>
+
+
+             <br>
+             <p>
+                 <span>That's all for the sample introduction</span>
+             </p>
+
+
+             <br>
+             <p>
+                 <span><a href="index.html">table of contents<a></span>
+                 <br>
+             </p>
+
+             <br>
+
+         </section>
+     </article>
+</div>
+<footer class="footer">
+</footer>
+</body>
+</html>

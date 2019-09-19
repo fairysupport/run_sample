@@ -1,0 +1,203 @@
+<html>
+<head>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>
+構成管理ツールfairy support runで行うサーバー管理入門 基本機能紹介2(mysql dumpを例に)
+</title>
+<link rel="stylesheet" href="./css/mb/common.css" type="text/css">
+<link rel="stylesheet" href="./css/pc/common.css" type="text/css" media="screen and (min-width:740px)">
+</head>
+<body>
+<header class="header">
+    <div class="title">構成管理ツールfairy&nbsp;support&nbsp;runで行うサーバー管理入門</div>
+</header>
+<div class="body">
+     <div class="table-of-contents-link"><a href="index.html">目次<a></div>
+     <div class="subtitle">基本機能紹介2(mysql&nbsp;dumpを例に)</div>
+     <article class="article">
+         <section class="first-section">
+             <h1>準備</h1>
+             <p>
+                 <span><a href="apache_install.html">前回</a>apache&nbsp;httpサーバーのインストールを例にfairy&nbsp;support&nbsp;runの使い方を紹介しました</span><br>
+                 <span>今回はmysql&nbsp;dumpを例に前回紹介できなかった基本機能の紹介を行います</span><br>
+                 <span><a href="apache_install.html">前回</a>の環境がある前提で話しを進めていきます</span><br>
+                 <span><a href="apache_install.html">前回</a>の内容を実行していない方は実行後このページをご覧ください</span><br>
+                 <span><a href="https://github.com/fairysupport/run_sample" target="_blank">こちら</a>からサンプルをダウンロードしてください</span>
+             </p>
+         </section>
+         <section>
+             <h1>MySQLのインストール</h1>
+
+             <p>
+                 <span>mysql&nbsp;dumpを試すためにMySQLをインストールします</span><br>
+                 <span><a href="https://github.com/fairysupport/run_sample" target="_blank">サンプル</a>のファイルを使用していきます</span>
+             </p>
+
+             <span class="code-title">ファイル構成</span>
+             <br>
+             <pre class="code-view">
+     |-- fairysupport_run
+     |   |-- common
+     |   |   |-- common.sh
+     |   |   `-- db_user.sh
+     |   |-- mysql
+     |   |   |-- include.txt
+     |   |   |-- my.cnf
+     |   |   `-- main.sh
+     |   |-- com_fairysupport_run.jar
+     |   |-- env.txt
+     |   `-- server.properties.local
+     |-- vagrant
+     |   `-- Vagrantfile</pre>
+
+             <p>
+                 <span>fairy&nbsp;support&nbsp;runを実行します</span>
+             </p>
+
+             <pre class="exec-view">
+fairysupport_run.bat mysql -f server.properties</pre>
+             </p>
+
+             <pre class="exec-view">
+./fairysupport_run.sh mysql -f server.properties</pre>
+             </p>
+
+
+             <p>
+                 <span>MySQLがインストールされました</span>
+             </p>
+
+             <h1>ファイルのダウンロード</h1>
+
+             <p>
+                 <span>mysql&nbsp;dumpの結果をダウンロードするサンプルを作成してみましょう</span><br>
+                 <span><a href="https://github.com/fairysupport/run_sample" target="_blank">サンプル</a>のファイルを使用していきます</span>
+             </p>
+
+             <span class="code-title">ファイル構成</span>
+             <br>
+             <pre class="code-view">
+     |-- fairysupport_run
+     |   |-- common
+     |   |   |-- common.sh
+     |   |   `-- db_user.sh
+     |   |-- dump_db
+     |   |-- dump_db_get
+     |   |   |-- get.txt
+     |   |   |-- include.txt
+     |   |   `-- main.sh
+     |   |-- com_fairysupport_run.jar
+     |   |-- env.txt
+     |   `-- server.properties.local
+     |-- vagrant
+     |   `-- Vagrantfile</pre>
+
+             <p>
+                 <span>dump_db_get内のmain.shを見てみましょう</span>
+             </p>
+
+             <span class="code-title">main.sh</span>
+             <br>
+             <pre class="code-view">
+#!/bin/bash
+
+. ../common/common.sh
+. ../common/db_user.sh
+
+validate_arg_num $# 1 "please input database name"
+
+mysqldump -u${db_root_user} -p${db_root_pw} -vvv ${1} > ./mysqldump.sql
+
+</pre>
+
+             <p>
+                 <span>validate_arg_numはcommon.shに定義してあります。引数の個数が第2引数(この場合1)未満ならエラーメッセージを出力して終了する関数です</span><br>
+                 <span>mysqldumpの結果を./mysqldump.sqlに出力しています</span>
+             </p>
+
+             <br>
+
+             <p>
+                 <span>dump_db_getフォルダ内にget.txtというファイルがあります</span><br>
+                 <span>get.txtという名前のファイルがある場合、fairy&nbsp;support&nbsp;runはget.txtに書かれているファイルまたはフォルダをダウンロードします</span><br>
+                 <span>get.txtには取得元ファイルまたはフォルダ名と取得後ファイルまたはフォルダ名を書きます</span><br>
+                 <span>取得元 スペース 取得後</span><br>
+                 <span>と書きます</span><br>
+                 <span>dump_db_get内のget.txtを見てみましょう</span>
+             </p>
+
+             <span class="code-title">get.txt</span>
+             <br>
+             <pre class="code-view">
+mysqldump.sql ../dump_db/${FILE}_${SERVER}/${1}/${DATE}_${HH}${MM}${SS}/mysqldump.sql
+</pre>
+
+             <p>
+                 <span>get.txtの内容</span><br>
+                 <span>mysqldump.sqlが取得元ファイルです。サーバー上のdump_db_getがカレントディレクトリとなります</span><br>
+                 <span>../dump_db/${FILE}_${SERVER}/${1}/${DATE}_${HH}${MM}${SS}/mysqldump.sqlが取得後ファイルです。ローカルのdump_db_getがカレントディレクトリとなります</span><br>
+                 <span>${}で囲われた部分は下記に置換されます</span><br>
+                 <span>${整数}:引数、${FILE}:プロパティファイル名、${SERVER}:プロパティファイル内キーピリオド左側、${ENV}:env.txtの内容、${DATE}:実行日、${HH}:実行時刻の時部分、${MM}:実行時刻の分部分、${SS}:実行時刻の秒部分に置換されます</span>
+             </p>
+
+             <h1>fairy support runの実行</h1>
+             <p>
+                 <span>実行してみます</span><br>
+             <pre class="exec-view">
+fairysupport_run.bat dump_db_get mysql -f server.properties</pre>
+             <pre class="exec-view">
+./fairysupport_run.sh dump_db_get mysql -f server.properties</pre>
+             </p>
+
+             <p>
+                 <span>dump_db配下を見てみましょう</span>
+             </p>
+
+             <span class="code-title">ファイル構成</span>
+             <br>
+             <pre class="code-view">
+     |-- fairysupport_run
+     |   |-- common
+     |   |   |-- common.sh
+     |   |   `-- db_user.sh
+     |   |-- dump_db
+     |   |   |-- server_server1
+     |   |   |   `-- mysql
+     |   |   |      `-- YYYYMMDD_HHMMSS
+     |   |   |         `-- mysqldump.sql
+     |   |   `-- server_server2
+     |   |       `-- mysql
+     |   |          `-- YYYYMMDD_HHMMSS
+     |   |             `-- mysqldump.sql
+     |   |-- dump_db_get
+     |   |   |-- get.txt
+     |   |   |-- include.txt
+     |   |   `-- main.sh
+     |   |-- com_fairysupport_run.jar
+     |   |-- env.txt
+     |   `-- server.properties.local
+     |-- vagrant
+     |   `-- Vagrantfile</pre>
+
+             <p>
+                 <span>mysql&nbsp;dumpの結果がダウンロードされているのがわかります</span>
+             </p>
+
+             <br>
+             <p>
+                 <span><a href="enc.html">次ページ</a>パスワード、パスフレーズの暗号化の機能を紹介</span>
+                 <br>
+                 <br>
+                 <span><a href="index.html">目次<a></span>
+                 <br>
+             </p>
+
+             <br>
+
+         </section>
+     </article>
+</div>
+<footer class="footer">
+</footer>
+</body>
+</html>

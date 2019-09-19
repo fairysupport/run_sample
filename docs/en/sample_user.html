@@ -1,0 +1,124 @@
+<html>
+<head>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>
+Introduction to server management with provisioning tool fairy support run sample introduction(user)
+</title>
+<link rel="stylesheet" href="./css/mb/common.css" type="text/css">
+<link rel="stylesheet" href="./css/pc/common.css" type="text/css" media="screen and (min-width:740px)">
+</head>
+<body>
+<header class="header">
+    <div class="title">Introduction to server management with provisioning tool fairy support run</div>
+</header>
+<div class="body">
+     <div class="table-of-contents-link"><a href="index.html">table of contents<a></div>
+     <div class="subtitle">Sample introduction(user)</div>
+     <article class="article">
+         <section class="first-section">
+             <h1>Prepare</h1>
+             <p>
+                 <span>Please download a sample from <a href="https://github.com/fairysupport/run_sample" target="_blank">here</a></span><br>
+                 <span>There are only simple things that don't need any explanation, but Some will be introduced</span><br>
+                 <span>Go to the vagrant folder in the downloaded sample and enter vagrant up to start the virtual environment</span>
+             </p>
+         </section>
+         <section>
+             <h1>Add user</h1>
+
+             <p>
+                 <span>Create a new user called newuser</span>
+             </p>
+
+             <pre class="exec-view">
+fairysupport_run.bat useradd newuser</pre>
+             </p>
+
+             <pre class="exec-view">
+./fairysupport_run.sh useradd newuser</pre>
+             </p>
+
+             <p>
+                 <span>New password: is displayed. Enter the newuser password</span><br>
+                 <span>User addition is complete</span>
+             </p>
+
+             <h1>Public key settings</h1>
+
+             <p>
+                 <span>Please prepare a private key public key pair (Here, the method for creating the private key public key is omitted)</span><br>
+                 <span>Create a folder called pubkey in the sshkey folder</span><br>
+                 <span>Put newuser's public key in pubkey folder</span><br>
+                 <span>Set the public key file name to newuser (the public key file name is the user name)</span>
+             </p>
+
+             <span class="code-title">folder tree</span>
+             <br>
+             <pre class="code-view">
+     |-- fairysupport_run
+     |   |-- common
+     |   |   `-- common.sh
+     |   |-- sshkey
+     |   |   |-- pubkey
+     |   |   |   `-- newuser
+     |   |   |-- include.txt
+     |   |   `-- main.sh
+     |   |-- com_fairysupport_run.jar
+     |   |-- env.txt
+     |   `-- server.properties.local
+     |-- vagrant
+     |   `-- Vagrantfile</pre>
+
+
+             <p>
+                 <span>Let's run</span>
+             </p>
+
+             <pre class="exec-view">
+fairysupport_run.bat sshkey</pre>
+             </p>
+
+             <pre class="exec-view">
+./fairysupport_run.sh sshkey</pre>
+             </p>
+
+             <p>
+                 <span>The file in pubkey will be .ssh/authorized_keys under each user's home directory, and you can access with public key authentication</span>
+             </p>
+
+             <h1>Add a user to a group</h1>
+
+             <p>
+                 <span>Add the newly created newuser to the wheel group</span>
+             </p>
+
+             <pre class="exec-view">
+fairysupport_run.bat gpasswd newuser wheel</pre>
+             </p>
+
+             <pre class="exec-view">
+./fairysupport_run.sh gpasswd newuser whee</pre>
+             </p>
+
+             <p>
+                 <span>newuser has been added to the wheel group</span>
+             </p>
+
+             <br>
+             <p>
+                 <span>On the <a href="sample_web.html">next page</a>, we will introduce the example of web application environment construction using <a href="https://github.com/fairysupport/run_sample" target="_blank">sample</a></span>
+                 <br>
+                 <br>
+                 <span><a href="index.html">table of contents<a></span>
+                 <br>
+             </p>
+
+             <br>
+
+         </section>
+     </article>
+</div>
+<footer class="footer">
+</footer>
+</body>
+</html>
