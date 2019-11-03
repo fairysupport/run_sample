@@ -99,6 +99,13 @@ firewalld_add_service() {
   fi
 }
 
+firewalld_add_port() {
+  if ! echo " `sudo -S firewall-cmd --list-ports --permanent --zone=public` " | grep "${1}" > /dev/null 2>&1; then
+      sudo -S firewall-cmd --permanent --zone=public --add-port="${1}"
+      sudo -S firewall-cmd --reload
+  fi
+}
+
 firewalld_add_rich() {
   if ! sudo -S firewall-cmd --permanent --list-rich-rules | grep "${1}" > /dev/null 2>&1; then
     sudo -S firewall-cmd --permanent --zone=public --add-rich-rule="${1}"
