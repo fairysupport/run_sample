@@ -46,6 +46,7 @@ sudo -S tar zxf pg_bigm-1.2-20191003.tar.gz
 cd pg_bigm-1.2-20191003
 sudo -S make USE_PGXS=1 PG_CONFIG=/usr/pgsql-11/bin/pg_config
 sudo -S make USE_PGXS=1 PG_CONFIG=/usr/pgsql-11/bin/pg_config install
+cd ${RUN_DIR}
 
 echo "##replace conf##"
 bk_cp_mode_label "./postgresql.conf" "/var/lib/pgsql/11/data/postgresql.conf" 600 postgresql_db_t

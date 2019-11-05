@@ -33,11 +33,36 @@ yum_install() {
   if ! sudo -S yum list installed | grep "${1}" > /dev/null 2>&1; then
      echo "sudo -S yum -y install \"${2}\""
      sudo -S yum -y install "${2}"
+  else
+    echo "\"${1}\" is already installed"
   fi
 }
 
 yum_installed_exit() {
   if yum_installed "${1}" ; then
+    echo "${2}"
+    exit 0
+  fi
+}
+
+yum_installed_regexp() {
+  if sudo -S yum list installed | grep -e "${1}" > /dev/null 2>&1; then
+     return 0
+  fi
+  return 1
+}
+
+yum_install_regexp() {
+  if ! sudo -S yum list installed | grep -e "${1}" > /dev/null 2>&1; then
+     echo "sudo -S yum -y install \"${2}\""
+     sudo -S yum -y install "${2}"
+  else
+    echo "\"${1}\" is already installed"
+  fi
+}
+
+yum_installed_exit_regexp() {
+  if yum_installed_regexp "${1}" ; then
     echo "${2}"
     exit 0
   fi
@@ -67,7 +92,7 @@ cp_mode_label() {
     sudo -S \cp -f "${1}" "${2}"
   fi
   sudo -S chmod ${3} "${2}"
-  local file_con_list=(`ls -Z ${2} | tr ':' ' '`)
+  local file_con_list=(`sudo -S ls -Z ${2} | tr ':' ' '`)
   if [ ${file_con_list[5]} != "${4}" ]; then
     change_label "${4}" "${2}"
   fi
