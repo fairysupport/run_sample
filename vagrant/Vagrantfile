@@ -6,6 +6,7 @@ Vagrant.configure("2") do |config|
     server.vm.network "private_network", ip: "192.168.33.10"
     server.vm.network "forwarded_port", guest: 80, host: 8080, host_ip: "127.0.0.1"
     server.vm.network "forwarded_port", guest: 22, host: 2230, host_ip: "127.0.0.1"
+    server.vm.synced_folder "../synced_folder/vm1", "/var/www/html", mount_options:['dmode=777','fmode=755']
   end
 
   config.vm.define :vm2 do |server|
@@ -13,5 +14,6 @@ Vagrant.configure("2") do |config|
     server.vm.network "private_network", ip: "192.168.33.11"
     server.vm.network "forwarded_port", guest: 80, host: 8181, host_ip: "127.0.0.1"
     server.vm.network "forwarded_port", guest: 22, host: 2240, host_ip: "127.0.0.1"
+    server.vm.synced_folder "../synced_folder/vm2", "/var/www/html", mount_options:['dmode=777','fmode=755']
   end
 end
