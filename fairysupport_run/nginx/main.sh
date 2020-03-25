@@ -2,13 +2,18 @@
 
 . ../common/common.sh
 
+# check
+yum_installed_exit "nginx" "nginx is already installed"
+
 suffix=""
 if [ $# -ge 1 ]; then
   suffix=".${1}"
+  if [ "${1}" = "local" ]; then
+    sudo sh -c "sed -i.bak -e 's/^\s*SELINUX=/#SELINUX=/g' /etc/selinux/config"
+    sudo sh -c "echo SELINUX=disabled >> /etc/selinux/config"
+    sudo -S setenforce 0
+  fi
 fi
-
-# check
-yum_installed_exit "nginx" "nginx is already installed"
 
 # repo
 cp_mode_label "./nginx.repo" "/etc/yum.repos.d/nginx.repo" 644 system_conf_t

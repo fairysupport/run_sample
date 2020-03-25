@@ -2,13 +2,18 @@
 
 . ../common/common.sh
 
+# check
+yum_installed_exit "httpd" "Apache HTTP SERVER is already installed"
+
 suffix=""
 if [ $# -ge 1 ]; then
   suffix=".${1}"
+  if [ "${1}" = "local" ]; then
+    sudo sh -c "sed -i.bak -e 's/^\s*SELINUX=/#SELINUX=/g' /etc/selinux/config"
+    sudo sh -c "echo SELINUX=disabled >> /etc/selinux/config"
+    sudo -S setenforce 0
+  fi
 fi
-
-# check
-yum_installed_exit "httpd" "Apache HTTP SERVER is already installed"
 
 # install Apache HTTP SERVER
 yum_install "httpd.x86_64" "httpd"
