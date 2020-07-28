@@ -1,1 +1,1 @@
-redis -f server.properties
+redis ${ENV} -f server.properties
