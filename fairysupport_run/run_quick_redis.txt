@@ -1,0 +1,3 @@
+dns           -f server.properties
+yum_init      -f server.properties
+run_redis.txt -f server.properties
