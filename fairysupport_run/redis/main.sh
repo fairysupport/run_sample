@@ -20,7 +20,11 @@ sudo -S yum -y install --enablerepo=remi redis
 bk_cp_mode_label "./redis.conf${suffix}" "/etc/redis.conf" 644 etc_t
 
 # set firewalld
-firewalld_add_rich 'rule family="ipv4" source address="192.168.1.0/24" port port="6379" protocol="tcp" accept'
+if [ $# -ge 1 ] && [ ${1} = "local" ]; then
+  firewalld_add_port "6379"
+else
+  firewalld_add_rich 'rule family="ipv4" source address="192.168.1.0/24" port port="6379" protocol="tcp" accept'
+fi
 
 # start
 sudo -S /bin/systemctl enable redis.service

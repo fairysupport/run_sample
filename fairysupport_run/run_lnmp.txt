@@ -1,4 +1,5 @@
-mysql -f server.properties
+mysql ${ENV} -f server.properties
 nginx ${ENV} -f server.properties
 php -f server.properties
 php_fpm -f server.properties
+redis ${ENV} -f server.properties

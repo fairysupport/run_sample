@@ -17,7 +17,11 @@ sudo -S yum --enablerepo=mysql80-community clean metadata
 yum_install "mysql-community-server" "mysql-community-server"
 
 echo "##set firewalld##"
-firewalld_add_rich 'rule family="ipv4" source address="192.168.1.0/24" port port="3306" protocol="tcp" accept'
+if [ $# -ge 1 ] && [ ${1} = "local" ]; then
+  firewalld_add_port "3306"
+else
+  firewalld_add_rich 'rule family="ipv4" source address="192.168.1.0/24" port port="3306" protocol="tcp" accept'
+fi
 
 echo "##initialize##"
 sudo -S mysqld  --initialize-insecure

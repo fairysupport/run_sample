@@ -24,7 +24,11 @@ yum_install "llvm-toolset-7" "llvm-toolset-7"
 yum_install "llvm5.0" "llvm5.0"
 
 echo "##set firewalld##"
-firewalld_add_rich 'rule family="ipv4" source address="192.168.1.0/24" port port="5432" protocol="tcp" accept'
+if [ $# -ge 1 ] && [ ${1} = "local" ]; then
+  firewalld_add_port "5432"
+else
+  firewalld_add_rich 'rule family="ipv4" source address="192.168.1.0/24" port port="5432" protocol="tcp" accept'
+fi
 
 echo "##initialize##"
 sudo -S PGSETUP_INITDB_OPTIONS="-E UTF8 --locale=C --text-search-config=simple" /usr/pgsql-11/bin/postgresql-11-setup initdb
