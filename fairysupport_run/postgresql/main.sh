@@ -25,7 +25,7 @@ yum_install "llvm5.0" "llvm5.0"
 
 echo "##set firewalld##"
 if [ $# -ge 1 ] && [ ${1} = "local" ]; then
-  firewalld_add_port "5432"
+  firewalld_add_port "5432/tcp"
 else
   firewalld_add_rich 'rule family="ipv4" source address="192.168.1.0/24" port port="5432" protocol="tcp" accept'
 fi
