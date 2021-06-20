@@ -12,7 +12,7 @@ Introduction to server management with provisioning tool fairy support run Basic
     <div class="title">Introduction to server management with provisioning tool fairy support run</div>
 </header>
 <div class="body">
-     <div class="table-of-contents-link"><a href="index.html">table of contents<a></div>
+     <div class="table-of-contents-link"><a href="index.html">table of contents</a></div>
      <div class="subtitle">Basic function introduction 2(Using mysql dump as an example)</div>
      <article class="article">
          <section class="first-section">
@@ -56,11 +56,9 @@ Introduction to server management with provisioning tool fairy support run Basic
 
              <pre class="exec-view">
 fairysupport_run.bat mysql -f server.properties</pre>
-             </p>
 
              <pre class="exec-view">
 ./fairysupport_run.sh mysql -f server.properties</pre>
-             </p>
 
 
              <p>
@@ -106,7 +104,7 @@ fairysupport_run.bat mysql -f server.properties</pre>
 
 validate_arg_num $# 1 "please input database name"
 
-mysqldump -u${db_root_user} -p${db_root_pw} -vvv ${1} > ./mysqldump.sql
+mysqldump -u${db_root_user} -p${db_root_pw} -vvv ${1} &gt; ./mysqldump.sql
 
 </pre>
 
@@ -187,7 +185,7 @@ fairysupport_run.bat dump_db_get mysql -f server.properties</pre>
                  <span>On the <a href="enc.html">next page</a>, we will introduce password and passphrase encryption functions</span>
                  <br>
                  <br>
-                 <span><a href="index.html">table of contents<a></span>
+                 <span><a href="index.html">table of contents</a></span>
                  <br>
              </p>
 

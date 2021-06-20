@@ -12,7 +12,7 @@
     <div class="title">構成管理ツールfairy&nbsp;support&nbsp;runで行うサーバー管理入門</div>
 </header>
 <div class="body">
-     <div class="table-of-contents-link"><a href="index.html">目次<a></div>
+     <div class="table-of-contents-link"><a href="index.html">目次</a></div>
      <div class="subtitle">基本機能紹介2(mysql&nbsp;dumpを例に)</div>
      <article class="article">
          <section class="first-section">
@@ -56,11 +56,9 @@
 
              <pre class="exec-view">
 fairysupport_run.bat mysql -f server.properties</pre>
-             </p>
 
              <pre class="exec-view">
 ./fairysupport_run.sh mysql -f server.properties</pre>
-             </p>
 
 
              <p>
@@ -106,7 +104,7 @@ fairysupport_run.bat mysql -f server.properties</pre>
 
 validate_arg_num $# 1 "please input database name"
 
-mysqldump -u${db_root_user} -p${db_root_pw} -vvv ${1} > ./mysqldump.sql
+mysqldump -u${db_root_user} -p${db_root_pw} -vvv ${1} &gt; ./mysqldump.sql
 
 </pre>
 
@@ -147,7 +145,6 @@ mysqldump.sql ../dump_db/${FILE}_${SERVER}/${1}/${DATE}_${HH}${MM}${SS}/mysqldum
 fairysupport_run.bat dump_db_get mysql -f server.properties</pre>
              <pre class="exec-view">
 ./fairysupport_run.sh dump_db_get mysql -f server.properties</pre>
-             </p>
 
              <p>
                  <span>dump_db配下を見てみましょう</span>
@@ -188,7 +185,7 @@ fairysupport_run.bat dump_db_get mysql -f server.properties</pre>
                  <span><a href="enc.html">次ページ</a>パスワード、パスフレーズの暗号化の機能を紹介</span>
                  <br>
                  <br>
-                 <span><a href="index.html">目次<a></span>
+                 <span><a href="index.html">目次</a></span>
                  <br>
              </p>
 

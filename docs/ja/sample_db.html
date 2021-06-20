@@ -12,7 +12,7 @@
     <div class="title">構成管理ツールfairy&nbsp;support&nbsp;runで行うサーバー管理入門</div>
 </header>
 <div class="body">
-     <div class="table-of-contents-link"><a href="index.html">目次<a></div>
+     <div class="table-of-contents-link"><a href="index.html">目次</a></div>
      <div class="subtitle">サンプル紹介(データベース関連)</div>
      <article class="article">
          <section class="first-section">
@@ -94,11 +94,9 @@ output ../sql/output/${2}/${FILE}_${SERVER}/${DATE}_${HH}${MM}${SS}
 
              <pre class="exec-view">
 fairysupport_run.bat sql_exe mysql user</pre>
-             </p>
 
              <pre class="exec-view">
 ./fairysupport_run.sh sql_exe mysql user</pre>
-             </p>
 
              <p>
                  <span>outputフォルダが出来ています</span><br>
@@ -159,11 +157,9 @@ FLUSH PRIVILEGES;
 
              <pre class="exec-view">
 fairysupport_run.bat sql_exe mysql user newuser2 newuser2_password</pre>
-             </p>
 
              <pre class="exec-view">
 ./fairysupport_run.sh sql_exe mysql user newuser2 newuser2_password</pre>
-             </p>
 
              <p>
                  <span>newuser2が作成されます</span>
@@ -209,11 +205,9 @@ CREATE DATABASE NEW_DB;
 
              <pre class="exec-view">
 fairysupport_run.bat sql_exe mysql db</pre>
-             </p>
 
              <pre class="exec-view">
 ./fairysupport_run.sh sql_exe mysql db</pre>
-             </p>
 
              <p>
                  <span>output&gt;dbフォルダが出来ています</span>
@@ -336,11 +330,9 @@ output ../sql_version/output/${2}/${FILE}_${SERVER}/${DATE}_${HH}${MM}${SS}
 
              <pre class="exec-view">
 fairysupport_run.bat sql_version_exe NEW_DB table 1 1</pre>
-             </p>
 
              <pre class="exec-view">
 ./fairysupport_run.sh sql_version_exe NEW_DB table 1 1</pre>
-             </p>
 
              <p>
                  <span>sql_version&gt;outputフォルダが出来ています。見てみましょう</span>
@@ -449,11 +441,9 @@ ALTER TABLE SAMPLE_1 ADD NEW_COL varchar(10);</pre>
 
              <pre class="exec-view">
 fairysupport_run.bat sql_version_exe NEW_DB table 2 3</pre>
-             </p>
 
              <pre class="exec-view">
 ./fairysupport_run.sh sql_version_exe NEW_DB table 2 3</pre>
-             </p>
 
              <p>
                  <span>000000002、000000003フォルダ配下のSQLが実行されました</span>
@@ -508,11 +498,9 @@ INSERT INTO SAMPLE_2 (NAME, SAMPLE_1_ID) SELECT 'sample2_name1', ID FROM SAMPLE_
 
              <pre class="exec-view">
 fairysupport_run.bat sql_exe NEW_DB insert</pre>
-             </p>
 
              <pre class="exec-view">
 ./fairysupport_run.sh sql_exe NEW_DB insert</pre>
-             </p>
 
              <p>
                  <span>output&gt;insertフォルダが出来ています</span>
@@ -583,11 +571,9 @@ fairysupport_run.bat sql_exe NEW_DB insert</pre>
 
              <pre class="exec-view">
 fairysupport_run.bat dump_db_get NEW_DB</pre>
-             </p>
 
              <pre class="exec-view">
 ./fairysupport_run.sh dump_db_get NEW_DB</pre>
-             </p>
 
              <p>
                  <span>dump_dbフォルダが出来ています</span>
@@ -661,11 +647,9 @@ fairysupport_run.bat dump_db_get NEW_DB</pre>
 
              <pre class="exec-view">
 fairysupport_run.bat dump_db_set NEW_DB YYYYMMDD_HHMMSS</pre>
-             </p>
 
              <pre class="exec-view">
 ./fairysupport_run.sh dump_db_set NEW_DB YYYYMMDD_HHMMSS</pre>
-             </p>
 
              <p>
                  <span>mysqldumpが実行されました</span>
@@ -680,7 +664,7 @@ fairysupport_run.bat dump_db_set NEW_DB YYYYMMDD_HHMMSS</pre>
 
              <br>
              <p>
-                 <span><a href="index.html">目次<a></span>
+                 <span><a href="index.html">目次</a></span>
                  <br>
              </p>
 

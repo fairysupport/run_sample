@@ -12,7 +12,7 @@
     <div class="title">構成管理ツールfairy&nbsp;support&nbsp;runで行うサーバー管理入門</div>
 </header>
 <div class="body">
-     <div class="table-of-contents-link"><a href="index.html">目次<a></div>
+     <div class="table-of-contents-link"><a href="index.html">目次</a></div>
      <div class="subtitle">基本機能紹介1(apache&nbsp;httpサーバーのインストールを例に)</div>
      <article class="article">
          <section class="first-section">
@@ -131,7 +131,6 @@ java -jar com_fairysupport_run.jar apache_test</pre>
 fairysupport_run.bat apache_test</pre>
              <pre class="exec-view">
 ./fairysupport_run.sh apache_test</pre>
-             </p>
 
              <h1>ファイルのアップロード</h1>
              <p>
@@ -361,11 +360,9 @@ sudo -S systemctl enable httpd.service
 
              <pre class="exec-view">
 fairysupport_run.bat run_apache_test.txt</pre>
-             </p>
 
              <pre class="exec-view">
 ./fairysupport_run.sh run_apache_test.txt</pre>
-             </p>
 
              <p>
                  <span>httpd.conf.localが/etc/httpd/conf/配下にhttpd.confとして置かれます</span>
@@ -385,7 +382,7 @@ fairysupport_run.bat run_apache_test.txt</pre>
              <pre class="code-view">
 
 yum_installed_exit() {
-  if sudo -S yum list installed | grep "${1}" > /dev/null 2>&1; then
+  if sudo -S yum list installed | grep "${1}" &gt; /dev/null 2&gt;&amp;1; then
     echo "${2}"
     exit 0
   fi
@@ -448,20 +445,20 @@ sudo -S systemctl enable httpd.service
              <pre class="code-view">
 
 yum_installed_exit() {
-  if sudo -S yum list installed | grep "${1}" > /dev/null 2>&1; then
+  if sudo -S yum list installed | grep "${1}" &gt; /dev/null 2&gt;&amp;1; then
     echo "${2}"
     exit 0
   fi
 }
 
 yum_install() {
-  if ! sudo -S yum list installed | grep "${1}" > /dev/null 2>&1; then
+  if ! sudo -S yum list installed | grep "${1}" &gt; /dev/null 2&gt;&amp;1; then
      sudo -S yum -y install "${2}"
   fi
 }
 
 bk_cp_mode_label() {
-  if ! sudo -S diff "${1}" "${2}" > /dev/null 2>&1; then
+  if ! sudo -S diff "${1}" "${2}" &gt; /dev/null 2>&amp;1; then
     sudo -S mv "${2}" "${2}.bk"
     sudo -S \cp -f "${1}" "${2}"
     sudo -S chmod ${3} "${2}"
@@ -471,19 +468,19 @@ bk_cp_mode_label() {
 }
 
 systemctl_start() {
-  if sudo -S systemctl status "${1}" | grep "Active: inactive" > /dev/null 2>&1; then
+  if sudo -S systemctl status "${1}" | grep "Active: inactive" &gt; /dev/null 2&gt;&amp;1; then
     sudo -S systemctl start "${1}.service"
   fi
 }
 
 systemctl_enable() {
-  if sudo -S systemctl is-enabled "${1}" | grep disabled > /dev/null 2>&1; then
+  if sudo -S systemctl is-enabled "${1}" | grep disabled &gt; /dev/null 2&gt;&amp;1; then
     sudo -S systemctl enable "${1}.service"
   fi
 }
 
 firewalld_add_service() {
-  if ! echo " `sudo -S firewall-cmd --list-services --permanent --zone=public` " | grep " ${1} " > /dev/null 2>&1; then
+  if ! echo " `sudo -S firewall-cmd --list-services --permanent --zone=public` " | grep " ${1} " &gt; /dev/null 2&gt;&amp;1; then
       sudo -S firewall-cmd --permanent --zone=public --add-service="${1}"
       sudo -S firewall-cmd --reload
   fi
@@ -536,11 +533,9 @@ systemctl_enable httpd
 
              <pre class="exec-view">
 fairysupport_run.bat run_apache_test.txt</pre>
-             </p>
 
              <pre class="exec-view">
 ./fairysupport_run.sh run_apache_test.txt</pre>
-             </p>
 
              <p>
                  <span>httpdがインストール済みなら</span><br>
@@ -630,11 +625,9 @@ apache_test ${ENV} -f server_web.properties
 
              <pre class="exec-view">
 fairysupport_run.bat run_all_apache_test.txt</pre>
-             </p>
 
              <pre class="exec-view">
 ./fairysupport_run.sh run_all_apache_test.txt</pre>
-             </p>
 
              <p>
                  <span>server_web.properties.localとserver_db.properties.localに記載されたサーバー上でシェルが実行されます</span>
@@ -643,11 +636,9 @@ fairysupport_run.bat run_all_apache_test.txt</pre>
              <br>
              <pre class="exec-view">
 fairysupport_run.bat run_apache_test.txt</pre>
-             </p>
 
              <pre class="exec-view">
 ./fairysupport_run.sh run_apache_test.txt</pre>
-             </p>
 
              <p>
                  <span>server_web.properties.localに記載されたサーバー上でのみシェルが実行されます</span>
@@ -658,7 +649,7 @@ fairysupport_run.bat run_apache_test.txt</pre>
                  <span><a href="mysql_dump.html">次ページ</a>mysql dumpを例にfairy support runの機能を紹介</span>
                  <br>
                  <br>
-                 <span><a href="index.html">目次<a></span>
+                 <span><a href="index.html">目次</a></span>
                  <br>
              </p>
 

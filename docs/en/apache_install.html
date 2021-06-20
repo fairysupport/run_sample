@@ -12,7 +12,7 @@ Introduction to server management with provisioning tool fairy support run Basic
     <div class="title">Introduction to server management with provisioning tool fairy support run</div>
 </header>
 <div class="body">
-     <div class="table-of-contents-link"><a href="index.html">table of contents<a></div>
+     <div class="table-of-contents-link"><a href="index.html">table of contents</a></div>
      <div class="subtitle">Basic function introduction 1(Using apache http server installation as an example)</div>
      <article class="article">
          <section class="first-section">
@@ -359,11 +359,9 @@ sudo -S systemctl enable httpd.service
 
              <pre class="exec-view">
 fairysupport_run.bat run_apache_test.txt</pre>
-             </p>
 
              <pre class="exec-view">
 ./fairysupport_run.sh run_apache_test.txt</pre>
-             </p>
 
              <p>
                  <span>httpd.conf.local is placed as httpd.conf under /etc/httpd/conf/</span>
@@ -446,20 +444,20 @@ sudo -S systemctl enable httpd.service
              <pre class="code-view">
 
 yum_installed_exit() {
-  if sudo -S yum list installed | grep "${1}" > /dev/null 2>&1; then
+  if sudo -S yum list installed | grep "${1}" &gt; /dev/null 2&gt;&amp;1; then
     echo "${2}"
     exit 0
   fi
 }
 
 yum_install() {
-  if ! sudo -S yum list installed | grep "${1}" > /dev/null 2>&1; then
+  if ! sudo -S yum list installed | grep "${1}" &gt; /dev/null 2&gt;&amp;1; then
      sudo -S yum -y install "${2}"
   fi
 }
 
 bk_cp_mode_label() {
-  if ! sudo -S diff "${1}" "${2}" > /dev/null 2>&1; then
+  if ! sudo -S diff "${1}" "${2}" &gt; /dev/null 2&gt;&amp;1; then
     sudo -S mv "${2}" "${2}.bk"
     sudo -S \cp -f "${1}" "${2}"
     sudo -S chmod ${3} "${2}"
@@ -469,19 +467,19 @@ bk_cp_mode_label() {
 }
 
 systemctl_start() {
-  if sudo -S systemctl status "${1}" | grep "Active: inactive" > /dev/null 2>&1; then
+  if sudo -S systemctl status "${1}" | grep "Active: inactive" &gt; /dev/null 2&gt;&amp;1; then
     sudo -S systemctl start "${1}.service"
   fi
 }
 
 systemctl_enable() {
-  if sudo -S systemctl is-enabled "${1}" | grep disabled > /dev/null 2>&1; then
+  if sudo -S systemctl is-enabled "${1}" | grep disabled &gt; /dev/null 2&gt;&amp;1; then
     sudo -S systemctl enable "${1}.service"
   fi
 }
 
 firewalld_add_service() {
-  if ! echo " `sudo -S firewall-cmd --list-services --permanent --zone=public` " | grep " ${1} " > /dev/null 2>&1; then
+  if ! echo " `sudo -S firewall-cmd --list-services --permanent --zone=public` " | grep " ${1} " &gt; /dev/null 2&gt;&amp;1; then
       sudo -S firewall-cmd --permanent --zone=public --add-service="${1}"
       sudo -S firewall-cmd --reload
   fi
@@ -534,11 +532,9 @@ systemctl_enable httpd
 
              <pre class="exec-view">
 fairysupport_run.bat run_apache_test.txt</pre>
-             </p>
 
              <pre class="exec-view">
 ./fairysupport_run.sh run_apache_test.txt</pre>
-             </p>
 
              <p>
                  <span>If httpd is already installed, the message "Apache HTTP SERVER is already installed" will be output and the process will be terminated</span>
@@ -627,11 +623,9 @@ apache_test ${ENV} -f server_web.properties
 
              <pre class="exec-view">
 fairysupport_run.bat run_all_apache_test.txt</pre>
-             </p>
 
              <pre class="exec-view">
 ./fairysupport_run.sh run_all_apache_test.txt</pre>
-             </p>
 
              <p>
                  <span>Shell runs on the servers written in server_web.properties.local and server_db.properties.local</span>
@@ -640,11 +634,9 @@ fairysupport_run.bat run_all_apache_test.txt</pre>
              <br>
              <pre class="exec-view">
 fairysupport_run.bat run_apache_test.txt</pre>
-             </p>
 
              <pre class="exec-view">
 ./fairysupport_run.sh run_apache_test.txt</pre>
-             </p>
 
              <p>
                  <span>Shell runs on the only server written in server_web.properties.local</span>
@@ -655,7 +647,7 @@ fairysupport_run.bat run_apache_test.txt</pre>
                  <span>On the <a href="mysql_dump.html">next page</a>, we will introduce the functions of fairy support run using mysql dump</span>
                  <br>
                  <br>
-                 <span><a href="index.html">table of contents<a></span>
+                 <span><a href="index.html">table of contents</a></span>
                  <br>
              </p>
 
