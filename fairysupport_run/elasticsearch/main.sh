@@ -19,6 +19,7 @@ sudo -S chown root:elasticsearch /etc/elasticsearch/elasticsearch.yml
 
 # set firewalld
 firewalld_add_rich 'rule family="ipv4" source address="192.168.1.0/24" port port="9200" protocol="tcp" accept'
+firewalld_add_rich 'rule family="ipv4" source address="192.168.33.0/24" port port="9200" protocol="tcp" accept'
 
 # start
 sudo -S /bin/systemctl daemon-reload
