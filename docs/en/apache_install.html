@@ -19,7 +19,7 @@ Introduction to server management with provisioning tool fairy support run Basic
              <h1>Prepare</h1>
              <p>
                  <span><a href="start.html">Last time</a>, installation method and a basic operation of fairy support run were introduced</span><br>
-                 <span>A basic function is introduced using apache http server installation as an example this time/span><br>
+                 <span>A basic function is introduced using apache http server installation as an example this time</span><br>
                  <span>Please download a sample from <a href="https://github.com/fairysupport/run_sample" target="_blank">here</a></span>
              </p>
          </section>
@@ -129,7 +129,6 @@ java -jar com_fairysupport_run.jar apache_test</pre>
 fairysupport_run.bat apache_test</pre>
              <pre class="exec-view">
 ./fairysupport_run.sh apache_test</pre>
-             </p>
 
              <h1>Upload file</h1>
              <p>
@@ -381,7 +380,7 @@ fairysupport_run.bat run_apache_test.txt</pre>
              <pre class="code-view">
 
 yum_installed_exit() {
-  if sudo -S yum list installed | grep "${1}" > /dev/null 2>&1; then
+  if sudo -S yum list installed | grep "${1}" > /dev/null 2>&amp;1; then
     echo "${2}"
     exit 0
   fi
